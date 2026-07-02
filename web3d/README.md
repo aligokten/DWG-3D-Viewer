@@ -32,9 +32,17 @@ statik sunucuda veya alt yolda** çalışır:
 - **GitHub Pages / Netlify / Vercel / Cloudflare Pages:** `dist/` klasörünü yükleyin.
 - **Kendi sunucunuz:** `dist/` içeriğini herhangi bir statik dizine kopyalayın.
 
-Depoda GitHub Actions iş akışı (`.github/workflows/web3d.yml`) her değişiklikte
-`dist/`'i derleyip **artifact** olarak yükler; Actions sekmesinden indirip
-istediğiniz yere koyabilirsiniz.
+## Online yayın (GitHub Pages)
+
+Depodaki GitHub Actions iş akışı (`.github/workflows/web3d.yml`) `main` dalına
+yapılan her `web3d/**` değişikliğinde siteyi derleyip **GitHub Pages'e yayınlar**.
+
+Yayın adresi (proje sitesi): `https://<kullanıcı>.github.io/<depo>/`
+(bu depo için: `https://aligokten.github.io/DWG-3D-Viewer/`).
+
+İlk yayında Pages otomatik etkinleştirilmeye çalışılır. Etkinleşmezse depoda
+**Settings → Pages → Build and deployment → Source: "GitHub Actions"** seçin ve
+iş akışını **Actions** sekmesinden `Run workflow` ile tetikleyin.
 
 ## Kullanım
 

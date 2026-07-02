@@ -32,8 +32,9 @@ npm run dev       # geliştirme
 npm run build     # statik çıktı: dist/  -> herhangi bir statik barındırmaya
 ```
 
-`.github/workflows/web3d.yml` her değişiklikte `dist/`'i artifact olarak üretir.
-Ayrıntı: `web3d/README.md`.
+`.github/workflows/web3d.yml`, `main` dalına yapılan her değişiklikte web
+sürümünü derleyip **GitHub Pages'e yayınlar**:
+`https://aligokten.github.io/DWG-3D-Viewer/`. Ayrıntı: `web3d/README.md`.
 
 ## Neden web yalnızca DXF?
 

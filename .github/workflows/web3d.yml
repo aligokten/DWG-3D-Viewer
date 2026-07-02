@@ -1,20 +1,29 @@
-name: Mimari3D Web (bağımsız sayfa)
+name: Mimari3D Web (GitHub Pages)
 
-# Bağımsız DXF->3B/PDF web sayfasını derler ve statik çıktıyı (dist/) artifact
-# olarak yükler. "Actions" sekmesinden indirip herhangi bir statik barındırmaya
-# (Netlify, Vercel, GitHub Pages, kendi sunucunuz) koyabilirsiniz.
-# Not: Depodaki asıl GitHub Pages sitesi mimarlık ofisi uygulamasına (webapp)
-# ayrılmıştır; çakışmamak için bu iş akışı Pages'e dağıtım yapmaz.
+# Bağımsız DXF->3B/PDF web sayfasını derler ve GitHub Pages'e yayınlar.
+# Yayın adresi (proje sitesi): https://<kullanici>.github.io/<depo>/
+# Not: Pages ilk çalıştırmada otomatik etkinleştirilmeye çalışılır
+# (configure-pages "enablement: true"). Etkinleşmezse depo ayarlarından
+# Settings -> Pages -> "Build and deployment" -> Source: "GitHub Actions" seçin.
 
 on:
   workflow_dispatch:
   push:
+    branches: [main]
     paths:
       - "web3d/**"
       - ".github/workflows/web3d.yml"
 
+# Pages'e dağıtım için gerekli izinler.
 permissions:
   contents: read
+  pages: write
+  id-token: write
+
+# Aynı anda tek dağıtım; devam edeni iptal etmeden sıraya alır.
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -40,9 +49,23 @@ jobs:
       - name: Derle
         run: npm run build
 
-      - name: Statik siteyi yükle (artifact)
-        uses: actions/upload-artifact@v4
+      - name: Pages yapılandır
+        uses: actions/configure-pages@v5
         with:
-          name: mimari3d-web-static
+          enablement: true
+
+      - name: Statik siteyi Pages artifact olarak yükle
+        uses: actions/upload-pages-artifact@v3
+        with:
           path: web3d/dist
-          if-no-files-found: error
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: GitHub Pages'e yayınla
+        id: deployment
+        uses: actions/deploy-pages@v4
