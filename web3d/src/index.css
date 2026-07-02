@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* Koyu mod: html.dark sınıfıyla kontrol edilir (isteğe bağlı) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+html,
+body,
+#root {
+  min-height: 100%;
+}

@@ -1,0 +1,71 @@
+name: Mimari3D Web (GitHub Pages)
+
+# Bağımsız DXF->3B/PDF web sayfasını derler ve GitHub Pages'e yayınlar.
+# Yayın adresi (proje sitesi): https://<kullanici>.github.io/<depo>/
+# Not: Pages ilk çalıştırmada otomatik etkinleştirilmeye çalışılır
+# (configure-pages "enablement: true"). Etkinleşmezse depo ayarlarından
+# Settings -> Pages -> "Build and deployment" -> Source: "GitHub Actions" seçin.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "web3d/**"
+      - ".github/workflows/web3d.yml"
+
+# Pages'e dağıtım için gerekli izinler.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Aynı anda tek dağıtım; devam edeni iptal etmeden sıraya alır.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web3d
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web3d/package-lock.json
+
+      - name: Bağımlılıkları yükle
+        run: npm ci
+
+      - name: Tip denetimi
+        run: npm run typecheck
+
+      - name: Derle
+        run: npm run build
+
+      - name: Pages yapılandır
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Statik siteyi Pages artifact olarak yükle
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web3d/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: GitHub Pages'e yayınla
+        id: deployment
+        uses: actions/deploy-pages@v4
