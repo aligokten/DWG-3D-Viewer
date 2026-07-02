@@ -1,0 +1,30 @@
+{
+  "name": "mimari3d-web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Bağımsız web sayfası: AutoCAD DXF çizimini tarayıcıda 3B modele ve A3 yatay PDF portföye çevirir.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dxf-parser": "^1.1.2",
+    "jspdf": "^4.2.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "^0.185.0",
+    "@vitejs/plugin-react": "^5",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vite": "^7"
+  }
+}

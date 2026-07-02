@@ -1,0 +1,48 @@
+name: Mimari3D Web (bağımsız sayfa)
+
+# Bağımsız DXF->3B/PDF web sayfasını derler ve statik çıktıyı (dist/) artifact
+# olarak yükler. "Actions" sekmesinden indirip herhangi bir statik barındırmaya
+# (Netlify, Vercel, GitHub Pages, kendi sunucunuz) koyabilirsiniz.
+# Not: Depodaki asıl GitHub Pages sitesi mimarlık ofisi uygulamasına (webapp)
+# ayrılmıştır; çakışmamak için bu iş akışı Pages'e dağıtım yapmaz.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "web3d/**"
+      - ".github/workflows/web3d.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web3d
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web3d/package-lock.json
+
+      - name: Bağımlılıkları yükle
+        run: npm ci
+
+      - name: Tip denetimi
+        run: npm run typecheck
+
+      - name: Derle
+        run: npm run build
+
+      - name: Statik siteyi yükle (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: mimari3d-web-static
+          path: web3d/dist
+          if-no-files-found: error
