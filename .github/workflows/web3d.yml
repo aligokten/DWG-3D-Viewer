@@ -3,9 +3,15 @@ name: Mimari3D Web (GitHub Pages)
 # Bağımsız DXF->3B/PDF web sayfasını derler ve GitHub Pages'e yayınlar.
 # Yayın adresi (proje sitesi): https://<kullanici>.github.io/<depo>/
 #
-# Pages, "configure-pages" adımındaki "enablement: true" ile ilk çalıştırmada
-# otomatik etkinleştirilir (Source: GitHub Actions). Bunun için deponun PUBLIC
-# olması (veya GitHub Pro/Team/Enterprise planı) gerekir. Elle bir ayar gerekmez.
+# YÖNTEM: Derlenen statik site (web3d/dist) doğrudan "gh-pages" dalına push edilir.
+# GitHub'ın "actions/deploy-pages" backend'i bu depoda ısrarla "Deployment failed,
+# try again later" verdiği için dala-dayalı (branch) yayın kullanıyoruz — çok daha
+# güvenilir.
+#
+# TEK SEFERLİK AYAR: Settings -> Pages -> "Build and deployment" ->
+#   Source: "Deploy from a branch"
+#   Branch: "gh-pages"  /  klasör: "/ (root)"
+# Bir kez seçildikten sonra her push otomatik yayınlanır.
 
 on:
   workflow_dispatch:
@@ -15,23 +21,17 @@ on:
       - "web3d/**"
       - ".github/workflows/web3d.yml"
 
-# Pages'e dağıtım için gerekli izinler.
+# gh-pages dalına yazabilmek için.
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# Aynı anda tek dağıtım; devam edeni iptal etmeden sıraya alır.
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web3d
     steps:
       - uses: actions/checkout@v4
 
@@ -42,31 +42,29 @@ jobs:
           cache-dependency-path: web3d/package-lock.json
 
       - name: Bağımlılıkları yükle
+        working-directory: web3d
         run: npm ci
 
       - name: Tip denetimi
+        working-directory: web3d
         run: npm run typecheck
 
       - name: Derle
+        working-directory: web3d
         run: npm run build
 
-      - name: Pages yapılandır (ve gerekiyorsa etkinleştir)
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
+      - name: Jekyll'i devre dışı bırak
+        run: touch web3d/dist/.nojekyll
 
-      - name: Statik siteyi Pages artifact olarak yükle
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: web3d/dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: GitHub Pages'e yayınla
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: gh-pages dalına yayınla
+        working-directory: web3d/dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git init -q
+          git checkout -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Deploy web3d to GitHub Pages ($GITHUB_SHA)"
+          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
