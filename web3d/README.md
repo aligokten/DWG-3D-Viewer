@@ -40,9 +40,11 @@ yapılan her `web3d/**` değişikliğinde siteyi derleyip **GitHub Pages'e yayı
 Yayın adresi (proje sitesi): `https://<kullanıcı>.github.io/<depo>/`
 (bu depo için: `https://aligokten.github.io/DWG-3D-Viewer/`).
 
-İlk yayında Pages otomatik etkinleştirilmeye çalışılır. Etkinleşmezse depoda
-**Settings → Pages → Build and deployment → Source: "GitHub Actions"** seçin ve
-iş akışını **Actions** sekmesinden `Run workflow` ile tetikleyin.
+**Tek seferlik kurulum (zorunlu):** İlk yayından önce depoda
+**Settings → Pages → Build and deployment → Source: "GitHub Actions"** seçin.
+(Workflow token'ı Pages'i ilk kez otomatik açamaz.) Bir kez yaptıktan sonra
+`main`'e her push otomatik yayınlanır; dilerseniz **Actions** sekmesinden
+`Run workflow` ile elle de tetikleyebilirsiniz.
 
 ## Kullanım
 

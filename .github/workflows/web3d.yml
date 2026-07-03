@@ -2,9 +2,11 @@ name: Mimari3D Web (GitHub Pages)
 
 # Bağımsız DXF->3B/PDF web sayfasını derler ve GitHub Pages'e yayınlar.
 # Yayın adresi (proje sitesi): https://<kullanici>.github.io/<depo>/
-# Not: Pages ilk çalıştırmada otomatik etkinleştirilmeye çalışılır
-# (configure-pages "enablement: true"). Etkinleşmezse depo ayarlarından
-# Settings -> Pages -> "Build and deployment" -> Source: "GitHub Actions" seçin.
+#
+# TEK SEFERLİK KURULUM (zorunlu): Depoda Settings -> Pages ->
+# "Build and deployment" -> Source: "GitHub Actions" seçin. Pages'i workflow
+# token'ı ilk kez otomatik açamadığı için bu adım elle yapılmalıdır; bir kez
+# yapıldıktan sonra her push otomatik yayınlanır.
 
 on:
   workflow_dispatch:
@@ -51,8 +53,6 @@ jobs:
 
       - name: Pages yapılandır
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Statik siteyi Pages artifact olarak yükle
         uses: actions/upload-pages-artifact@v3
