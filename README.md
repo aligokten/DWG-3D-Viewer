@@ -7,6 +7,7 @@ PDF proje portföyü** üreten araç. İki sürümüyle birlikte gelir:
 |--------------------|----------|--------------|-------|
 | `desktop/mimari3d` | Masaüstü (Windows `.exe`) | `.dwg` + `.dxf` | 3B görünümler, `.obj`, A3 PDF |
 | `web3d`            | Web (bağımsız statik sayfa) | `.dxf` | Canlı 3B önizleme, `.obj`, A3 PDF |
+| `site`             | Web (tanıtım sitesi) | — | Mimarlık ofisi için 3B animasyonlu vitrin |
 
 ## Masaüstü sürümü (`desktop/mimari3d`)
 
@@ -32,9 +33,27 @@ npm run dev       # geliştirme
 npm run build     # statik çıktı: dist/  -> herhangi bir statik barındırmaya
 ```
 
-`.github/workflows/web3d.yml`, `main` dalına yapılan her değişiklikte web
-sürümünü derleyip **GitHub Pages'e yayınlar**:
-`https://aligokten.github.io/DWG-3D-Viewer/`. Ayrıntı: `web3d/README.md`.
+`.github/workflows/web3d.yml`, `main` dalına yapılan her değişiklikte iki web
+uygulamasını birden derleyip **GitHub Pages'e yayınlar**:
+
+- `https://aligokten.github.io/DWG-3D-Viewer/` — tanıtım sitesi (`site/`)
+- `https://aligokten.github.io/DWG-3D-Viewer/viewer/` — DXF aracı (`web3d/`)
+
+Ayrıntı: `web3d/README.md`.
+
+## Tanıtım sitesi (`site`)
+
+Mimari tasarım ofisi için Three.js ile yazılmış, kaydırmaya bağlı kamera
+geçişleri olan 3B animasyonlu vitrin sitesi: mat antrasit boşluk üzerinde
+parlayan altın tel-kafes maketler, raycaster ile proje kartları ve DXF aracına
+bağlantı. Ayrıntı: `site/README.md`.
+
+```bash
+cd site
+npm install
+npm run dev       # geliştirme
+npm run build     # statik çıktı: dist/
+```
 
 ## Neden web yalnızca DXF?
 
