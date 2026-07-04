@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gökten Mimarlık — Mimari Tasarım Stüdyosu</title>
+    <meta
+      name="description"
+      content="Gökten Mimarlık: konsept tasarımdan uygulamaya, çağdaş mimarlık stüdyosu. Projelerimizi etkileşimli 3B sahnede keşfedin."
+    />
+    <meta name="theme-color" content="#0d0d0f" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%230d0d0f'/%3E%3Cpath d='M50 18 22 78h12l16-36 16 36h12z' fill='none' stroke='%23d9a441' stroke-width='5'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <canvas id="scene" aria-hidden="true"></canvas>
+
+    <header class="nav">
+      <a class="nav__logo" href="#giris" data-goto="0">GÖKTEN<span>MİMARLIK</span></a>
+      <nav class="nav__links" aria-label="Bölümler">
+        <a href="#projeler" data-goto="1">Projeler</a>
+        <a href="#studyo" data-goto="2">Stüdyo</a>
+        <a href="#hizmetler" data-goto="3">Hizmetler</a>
+        <a href="#iletisim" data-goto="4">İletişim</a>
+        <a class="nav__tool" href="viewer/" title="DXF çizimlerinizi tarayıcıda 3B modele çevirin">3B Görüntüleyici ↗</a>
+      </nav>
+    </header>
+
+    <div class="dots" role="navigation" aria-label="Sayfa ilerlemesi">
+      <button data-goto="0" aria-label="Giriş"></button>
+      <button data-goto="1" aria-label="Projeler"></button>
+      <button data-goto="2" aria-label="Stüdyo"></button>
+      <button data-goto="3" aria-label="Hizmetler"></button>
+      <button data-goto="4" aria-label="İletişim"></button>
+    </div>
+
+    <main id="content">
+      <section class="panel panel--hero" id="giris">
+        <div class="panel__inner">
+          <p class="kicker">Mimari Tasarım Stüdyosu</p>
+          <h1>Boşluktan<br /><em>mekân</em> doğar.</h1>
+          <p class="lede">
+            Konsept tasarımdan uygulama projesine; ışığı, strüktürü ve insanı
+            aynı çizgide buluşturan yapılar tasarlıyoruz.
+          </p>
+          <a class="cta" href="#projeler" data-goto="1">Projeleri Keşfet ↓</a>
+        </div>
+      </section>
+
+      <section class="panel panel--projects" id="projeler">
+        <div class="panel__inner">
+          <p class="kicker">Seçili İşler</p>
+          <h2>Projeler</h2>
+          <p class="lede">
+            Modellerin üzerine gelin, detaylar için tıklayın.
+          </p>
+        </div>
+      </section>
+
+      <section class="panel panel--studio" id="studyo">
+        <div class="panel__inner panel__inner--right">
+          <p class="kicker">Stüdyo</p>
+          <h2>Tasarım bir<br />düşünme biçimidir.</h2>
+          <p class="lede">
+            2012'den bu yana İstanbul merkezli ekibimizle konut, kültür ve karma
+            kullanım yapıları tasarlıyoruz. Her projeye bağlamından başlar,
+            strüktürü mimarinin diliyle görünür kılarız.
+          </p>
+          <dl class="stats">
+            <div><dt>120+</dt><dd>Tamamlanan proje</dd></div>
+            <div><dt>14</dt><dd>Ulusal &amp; uluslararası ödül</dd></div>
+            <div><dt>26</dt><dd>Kişilik tasarım ekibi</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="panel panel--services" id="hizmetler">
+        <div class="panel__inner">
+          <p class="kicker">Neler Yapıyoruz</p>
+          <h2>Hizmetler</h2>
+          <ul class="services">
+            <li><h3>Konsept Tasarım</h3><p>Bağlam analizi, kütle etütleri ve tasarım fikrinin ilk eskizleri.</p></li>
+            <li><h3>Mimari Projelendirme</h3><p>Ruhsat ve uygulama projeleri, detay çözümleri, teknik şartnameler.</p></li>
+            <li><h3>BIM &amp; 3B Görselleştirme</h3><p>Parametrik modelleme, gerçek zamanlı sunumlar ve etkileşimli 3B deneyimler.</p></li>
+            <li><h3>İç Mimarlık</h3><p>Malzeme, ışık ve mobilya ölçeğinde bütüncül iç mekân tasarımı.</p></li>
+            <li><h3>Kentsel Tasarım</h3><p>Kamusal alan, peyzaj ve kent dokusuyla kurulan ilişkiler.</p></li>
+            <li><h3>Danışmanlık</h3><p>Fizibilite, yarışma ve tasarım süreç yönetimi danışmanlığı.</p></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="panel panel--contact" id="iletisim">
+        <div class="panel__inner">
+          <p class="kicker">Birlikte Çalışalım</p>
+          <h2>İletişim</h2>
+          <p class="lede">
+            Projenizi konuşmak için bize yazın; ilk görüşme her zaman ücretsizdir.
+          </p>
+          <address class="contact">
+            <a class="contact__mail" href="mailto:studyo@goktenmimarlik.com">studyo@goktenmimarlik.com</a>
+            <p>Meclis-i Mebusan Cad. 81, Fındıklı — İstanbul</p>
+            <p>+90 212 000 00 00</p>
+          </address>
+          <p class="toolnote">
+            Elinizde DXF çizim mi var? Ücretsiz aracımızla tarayıcıda 3B modele çevirin:
+            <a href="viewer/">Mimari3D Görüntüleyici ↗</a>
+          </p>
+          <footer class="foot">© 2026 Gökten Mimarlık — Tüm hakları saklıdır.</footer>
+        </div>
+      </section>
+    </main>
+
+    <div class="tooltip" id="tooltip" role="status" aria-hidden="true"></div>
+
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+      <div class="modal__card">
+        <button class="modal__close" id="modal-close" aria-label="Kapat">×</button>
+        <p class="kicker" id="modal-kicker"></p>
+        <h3 id="modal-title"></h3>
+        <p id="modal-body"></p>
+        <dl class="modal__meta" id="modal-meta"></dl>
+      </div>
+    </div>
+
+    <noscript>
+      <p style="padding: 2rem; color: #eee">
+        Bu site etkileşimli 3B sahne için JavaScript gerektirir.
+      </p>
+    </noscript>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
