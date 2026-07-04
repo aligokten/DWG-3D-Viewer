@@ -1,0 +1,39 @@
+{
+  "brand": "SAGG+",
+  "heroKicker": "İnşaat · Mimarlık · Akustik",
+  "heroLine1": "Mekânı",
+  "heroLine2": "yeniden",
+  "heroLine3": "düşünüyoruz",
+  "heroText": "SAGG+, 2020'den bu yana Ege'de mimari proje, akustik raporlama, tadilat ve inşaat işlerini kişiye özel tasarım anlayışıyla hayata geçiriyor.",
+  "aboutTitle": "Estetik, işlevsel ve sürdürülebilir",
+  "aboutText": "Mimar Sinem Gökten ve Mimar Ali Gökten ortaklığında kurulan SAGG+; inşaat, mimarlık, akustik, mühendislik ve iç mimari alanlarında hizmet verir. Milas ve Bodrum bölgesinde, son teknolojiyle üretilen projelerimizde müşteri memnuniyetini ve mekânın ruhunu merkeze alırız.",
+  "stats": [
+    { "value": "2020", "label": "Kuruluş" },
+    { "value": "50+", "label": "Tamamlanan proje" },
+    { "value": "3", "label": "Uzmanlık alanı" },
+    { "value": "Ege", "label": "Bölge" }
+  ],
+  "services": [
+    {
+      "title": "Mimarlık",
+      "text": "Konsept tasarımdan uygulama projesine; villa, konut ve ticari yapılarda kişiye özel mimari çözümler."
+    },
+    {
+      "title": "İnşaat",
+      "text": "Anahtar teslim inşaat, tadilat ve renovasyon işlerinde şeffaf süreç yönetimi ve titiz uygulama."
+    },
+    {
+      "title": "Akustik",
+      "text": "Akustik ölçüm, raporlama ve mühendislik çözümleriyle konfor standartlarını yükseltiyoruz."
+    },
+    {
+      "title": "İç Mimari",
+      "text": "Mekânın ruhuna uygun malzeme, mobilya ve aydınlatma seçkisiyle bütüncül iç mekân tasarımı."
+    }
+  ],
+  "contactEmail": "info@saggplus.com",
+  "contactPhone": "+90 (252) 000 00 00",
+  "contactAddress": "İsmetpaşa Mah. Zafer Cad. No:42/C-D, Milas / Muğla",
+  "instagram": "https://www.instagram.com/sagg.insaat/",
+  "footerNote": "SAGG+ İnşaat Mimarlık Akustik Müh. San. Tic. Ltd. Şti."
+}

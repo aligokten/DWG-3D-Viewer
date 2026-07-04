@@ -19,6 +19,7 @@ on:
     branches: [main]
     paths:
       - "web3d/**"
+      - "saggplus/**"
       - ".github/workflows/web3d.yml"
 
 # gh-pages dalına yazabilmek için.
@@ -52,6 +53,10 @@ jobs:
       - name: Derle
         working-directory: web3d
         run: npm run build
+
+      - name: SAGG+ landing sayfasını ekle
+        # Statik site; derleme gerektirmez. Yayın adresi: .../DWG-3D-Viewer/saggplus/
+        run: cp -r saggplus web3d/dist/saggplus
 
       - name: Jekyll'i devre dışı bırak
         run: touch web3d/dist/.nojekyll

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAGG+ | İnşaat · Mimarlık · Akustik — Milas / Muğla</title>
+  <meta name="description" content="SAGG+ İnşaat Mimarlık Akustik — Milas ve Bodrum bölgesinde mimari proje, akustik rapor, tadilat ve inşaat işleri. Estetik, işlevsel ve sürdürülebilir çözümler." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231c1a17'/%3E%3Ctext x='32' y='42' font-family='Georgia' font-size='28' fill='%23efe9dd' text-anchor='middle'%3ES%2B%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ==================== PRELOADER ==================== -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader__inner">
+      <span class="preloader__brand">SAGG<em>+</em></span>
+      <span class="preloader__counter" id="preCounter">0</span>
+    </div>
+    <div class="preloader__bar"><span id="preBar"></span></div>
+  </div>
+  <div class="curtain curtain--left" aria-hidden="true"></div>
+  <div class="curtain curtain--right" aria-hidden="true"></div>
+
+  <!-- ==================== CURSOR ==================== -->
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+  <!-- ==================== NAV ==================== -->
+  <header class="nav" id="nav">
+    <a class="nav__logo hoverable" href="#top" data-site="brandHtml">SAGG<em>+</em></a>
+    <nav class="nav__links" aria-label="Ana menü">
+      <a class="hoverable" href="#hakkimizda">Hakkımızda</a>
+      <a class="hoverable" href="#hizmetler">Hizmetler</a>
+      <a class="hoverable" href="#projeler">Projeler</a>
+      <a class="hoverable" href="#iletisim">İletişim</a>
+    </nav>
+    <button class="nav__burger hoverable" id="burger" aria-label="Menüyü aç" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <!-- ==================== FULLSCREEN MENU ==================== -->
+  <div class="menu" id="menu" aria-hidden="true">
+    <nav class="menu__links" aria-label="Tam ekran menü">
+      <a class="hoverable" href="#top"><small>01</small>Ana Sayfa</a>
+      <a class="hoverable" href="#hakkimizda"><small>02</small>Hakkımızda</a>
+      <a class="hoverable" href="#hizmetler"><small>03</small>Hizmetler</a>
+      <a class="hoverable" href="#projeler"><small>04</small>Projeler</a>
+      <a class="hoverable" href="#iletisim"><small>05</small>İletişim</a>
+    </nav>
+    <div class="menu__meta">
+      <span data-site="contactAddress"></span>
+      <a class="hoverable" data-site="contactEmailLink" href="#"></a>
+    </div>
+  </div>
+
+  <main id="top">
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero">
+      <p class="hero__kicker reveal-line"><span data-site="heroKicker"></span></p>
+      <h1 class="hero__title" aria-label="Mekânı yeniden düşünüyoruz">
+        <span class="hero__line"><span data-site="heroLine1">Mekânı</span></span>
+        <span class="hero__line hero__line--indent"><span class="hero__line-em" data-site="heroLine2">yeniden</span></span>
+        <span class="hero__line"><span data-site="heroLine3">düşünüyoruz</span></span>
+      </h1>
+      <div class="hero__bottom">
+        <p class="hero__text reveal" data-site="heroText"></p>
+        <div class="hero__scroll reveal" aria-hidden="true">
+          <span>Kaydır</span>
+          <span class="hero__scroll-line"></span>
+        </div>
+      </div>
+      <div class="hero__figure" aria-hidden="true">
+        <svg viewBox="0 0 600 720" preserveAspectRatio="xMidYMid slice">
+          <rect width="600" height="720" fill="#dcd4c4"/>
+          <g stroke="#1c1a17" stroke-width="3" fill="none">
+            <rect x="90" y="300" width="420" height="260"/>
+            <line x1="90" y1="300" x2="230" y2="180"/>
+            <line x1="230" y1="180" x2="510" y2="180"/>
+            <line x1="510" y1="180" x2="510" y2="300"/>
+            <rect x="140" y="380" width="110" height="180"/>
+            <rect x="300" y="380" width="160" height="120" fill="#1c1a17" opacity="0.85"/>
+            <line x1="60" y1="560" x2="540" y2="560"/>
+          </g>
+          <circle cx="470" cy="110" r="42" fill="#a87b4f"/>
+          <g stroke="#6f6a5f" stroke-width="2" opacity="0.55" fill="none">
+            <path d="M110 630 q22 -44 44 0 q22 -44 44 0"/>
+            <path d="M420 630 q22 -44 44 0"/>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ==================== MARQUEE ==================== -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track" id="marqueeTrack">
+        <span>Mimarlık&nbsp;—&nbsp;İnşaat&nbsp;—&nbsp;Akustik&nbsp;—&nbsp;İç&nbsp;Mimari&nbsp;—&nbsp;</span>
+      </div>
+    </div>
+
+    <!-- ==================== ABOUT ==================== -->
+    <section class="about section" id="hakkimizda">
+      <div class="section__head">
+        <span class="section__no reveal">01</span>
+        <span class="section__label reveal">Hakkımızda</span>
+      </div>
+      <h2 class="about__title split-reveal" data-site="aboutTitle"></h2>
+      <div class="about__body">
+        <p class="about__text reveal" data-site="aboutText"></p>
+        <ul class="about__stats" id="stats"></ul>
+      </div>
+    </section>
+
+    <!-- ==================== SERVICES ==================== -->
+    <section class="services section" id="hizmetler">
+      <div class="section__head">
+        <span class="section__no reveal">02</span>
+        <span class="section__label reveal">Hizmetler</span>
+      </div>
+      <ul class="services__list" id="servicesList"></ul>
+    </section>
+
+    <!-- ==================== PROJECTS ==================== -->
+    <section class="projects section" id="projeler">
+      <div class="section__head">
+        <span class="section__no reveal">03</span>
+        <span class="section__label reveal">Seçili Projeler</span>
+      </div>
+      <div class="projects__filters reveal" id="filters" role="tablist" aria-label="Proje filtreleri"></div>
+      <div class="projects__grid" id="projectsGrid"></div>
+    </section>
+
+    <!-- ==================== CONTACT ==================== -->
+    <section class="contact section" id="iletisim">
+      <div class="section__head">
+        <span class="section__no reveal">04</span>
+        <span class="section__label reveal">İletişim</span>
+      </div>
+      <h2 class="contact__title split-reveal">Projenizi birlikte<br/>hayata geçirelim</h2>
+      <a class="contact__cta hoverable reveal" data-site="contactEmailLink" href="#">
+        <span data-site="contactEmail"></span>
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M13 5l7 7-7 7"/></svg>
+      </a>
+      <div class="contact__grid">
+        <div class="reveal">
+          <h3>Adres</h3>
+          <p data-site="contactAddress"></p>
+        </div>
+        <div class="reveal">
+          <h3>Telefon</h3>
+          <p data-site="contactPhone"></p>
+        </div>
+        <div class="reveal">
+          <h3>Sosyal</h3>
+          <p><a class="hoverable" data-site="instagramLink" href="#" target="_blank" rel="noopener">Instagram ↗</a></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <span class="footer__brand" data-site="brandHtml">SAGG<em>+</em></span>
+    <p class="footer__note"><span data-site="footerNote"></span> · © <span id="year"></span></p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

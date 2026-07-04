@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SAGG+ Yönetim Paneli</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23a87b4f'/%3E%3Ctext x='32' y='42' font-family='Georgia' font-size='28' fill='%23efe9dd' text-anchor='middle'%3ES%2B%3C/text%3E%3C/svg%3E" />
+<style>
+:root {
+  --bg: #efe9dd; --panel: #ffffff; --ink: #1c1a17; --ink-soft: #55504a;
+  --accent: #a87b4f; --line: rgba(28,26,23,.14); --danger: #b0442c; --ok: #3f7d4e;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", -apple-system, "Segoe UI", sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:15px; line-height:1.55; }
+em { font-style:normal; color:var(--accent); }
+button { font-family:inherit; cursor:pointer; }
+input, textarea, select { font-family:inherit; font-size:14px; color:var(--ink); }
+
+.topbar {
+  position:sticky; top:0; z-index:10;
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  padding:.9rem 1.5rem; background:var(--ink); color:var(--bg);
+}
+.topbar h1 { font-family:var(--font-display); font-weight:400; font-size:1.2rem; letter-spacing:.03em; }
+.topbar .who { font-size:.8rem; opacity:.7; }
+.topbar .actions { display:flex; gap:.6rem; align-items:center; }
+
+.btn {
+  border:1px solid var(--line); background:var(--panel); color:var(--ink);
+  padding:.55rem 1.1rem; border-radius:8px; font-size:.85rem;
+  transition:background .2s, color .2s, border-color .2s, opacity .2s;
+}
+.btn:hover { border-color:var(--accent); }
+.btn:disabled { opacity:.5; cursor:not-allowed; }
+.btn--primary { background:var(--ink); color:var(--bg); border-color:var(--ink); }
+.btn--primary:hover { background:var(--accent); border-color:var(--accent); }
+.btn--accent { background:var(--accent); color:#fff; border-color:var(--accent); }
+.btn--danger { color:var(--danger); }
+.btn--danger:hover { border-color:var(--danger); background:#fbeae5; }
+.btn--ghost { background:transparent; border-color:rgba(239,233,221,.35); color:var(--bg); }
+.btn--ghost:hover { border-color:var(--accent); color:var(--accent); }
+.btn--sm { padding:.3rem .65rem; font-size:.78rem; border-radius:6px; }
+
+.wrap { max-width:1080px; margin:0 auto; padding:1.6rem 1.2rem 5rem; }
+
+/* ---- login ---- */
+.login { max-width:520px; margin:6vh auto; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:2.2rem; }
+.login h2 { font-family:var(--font-display); font-weight:400; font-size:1.6rem; margin-bottom:.4rem; }
+.login p { color:var(--ink-soft); font-size:.9rem; margin-bottom:1.2rem; }
+.login ol { margin:0 0 1.2rem 1.2rem; color:var(--ink-soft); font-size:.85rem; }
+.login ol li { margin-bottom:.35rem; }
+.login code { background:var(--bg); padding:.1rem .4rem; border-radius:4px; font-size:.8rem; }
+
+.field { margin-bottom:1rem; }
+.field label { display:block; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:.35rem; }
+.field input, .field textarea, .field select {
+  width:100%; border:1px solid var(--line); border-radius:8px;
+  padding:.6rem .8rem; background:#fff; outline:none;
+  transition:border-color .2s;
+}
+.field input:focus, .field textarea:focus { border-color:var(--accent); }
+.field textarea { min-height:88px; resize:vertical; }
+.field .hint { font-size:.75rem; color:var(--ink-soft); margin-top:.3rem; }
+
+/* ---- tabs ---- */
+.tabs { display:flex; gap:.5rem; margin:1.4rem 0; flex-wrap:wrap; }
+.tabs button {
+  border:1px solid var(--line); background:transparent; color:var(--ink-soft);
+  border-radius:999px; padding:.5rem 1.2rem; font-size:.82rem; letter-spacing:.08em; text-transform:uppercase;
+}
+.tabs button.active { background:var(--ink); color:var(--bg); border-color:var(--ink); }
+
+.card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:1.5rem; margin-bottom:1.2rem; }
+.card h3 { font-family:var(--font-display); font-weight:400; font-size:1.25rem; margin-bottom:1rem; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0 1rem; }
+@media (max-width:640px){ .grid2 { grid-template-columns:1fr; } }
+
+/* ---- proje listesi ---- */
+.plist { display:flex; flex-direction:column; gap:.7rem; }
+.pitem {
+  display:grid; grid-template-columns:72px 1fr auto; gap:1rem; align-items:center;
+  border:1px solid var(--line); border-radius:10px; padding:.7rem .9rem; background:#fff;
+}
+.pitem img { width:72px; height:72px; object-fit:cover; border-radius:8px; background:var(--bg); }
+.pitem .t { font-weight:500; }
+.pitem .m { font-size:.78rem; color:var(--ink-soft); }
+.pitem .ops { display:flex; gap:.35rem; flex-wrap:wrap; justify-content:flex-end; }
+@media (max-width:560px){ .pitem { grid-template-columns:56px 1fr; } .pitem .ops { grid-column:1/-1; justify-content:flex-start; } }
+
+.imgprev { display:flex; align-items:center; gap:1rem; margin-top:.4rem; }
+.imgprev img { width:110px; height:110px; object-fit:cover; border-radius:10px; border:1px solid var(--line); background:var(--bg); }
+.imgprev .none { font-size:.8rem; color:var(--ink-soft); }
+
+.rowlist { display:flex; flex-direction:column; gap:.8rem; }
+.rowlist .row { border:1px dashed var(--line); border-radius:10px; padding:.9rem; position:relative; }
+.rowlist .row .del { position:absolute; top:.5rem; right:.5rem; }
+
+/* ---- durum çubuğu ---- */
+.status {
+  position:fixed; left:50%; bottom:1.2rem; transform:translateX(-50%);
+  background:var(--ink); color:var(--bg); border-radius:999px;
+  padding:.6rem 1.4rem; font-size:.85rem; display:none; z-index:20;
+  box-shadow:0 8px 30px rgba(0,0,0,.25); max-width:90vw;
+}
+.status.show { display:block; }
+.status.ok { background:var(--ok); }
+.status.err { background:var(--danger); }
+
+.muted { color:var(--ink-soft); font-size:.85rem; }
+.right { text-align:right; }
+.savebar { display:flex; justify-content:flex-end; gap:.6rem; margin-top:.4rem; }
+.pill { display:inline-block; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; background:var(--bg); border-radius:999px; padding:.2rem .7rem; color:var(--ink-soft); }
+dialog { border:none; border-radius:16px; padding:0; max-width:640px; width:calc(100vw - 2rem); }
+dialog::backdrop { background:rgba(28,26,23,.55); }
+dialog .card { margin:0; border:none; }
+.hidden { display:none !important; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <h1>SAGG<em>+</em> Yönetim Paneli</h1>
+  <div class="actions">
+    <span class="who" id="who"></span>
+    <a class="btn btn--ghost btn--sm" href="index.html" target="_blank" rel="noopener">Siteyi Gör ↗</a>
+    <button class="btn btn--ghost btn--sm hidden" id="logoutBtn">Çıkış</button>
+  </div>
+</header>
+
+<!-- ==================== GİRİŞ ==================== -->
+<section class="login" id="loginView">
+  <h2>Yönetici Girişi</h2>
+  <p>Panel, değişiklikleri doğrudan GitHub deposuna işler ve site otomatik yayınlanır.
+     Giriş için bir <strong>GitHub kişisel erişim anahtarı</strong> (fine-grained token) gerekir.</p>
+  <ol>
+    <li>GitHub → <strong>Settings → Developer settings → Fine-grained tokens → Generate new token</strong></li>
+    <li>Repository access: yalnızca <code id="repoHintName">aligokten/DWG-3D-Viewer</code></li>
+    <li>Permissions → Repository permissions → <strong>Contents: Read and write</strong></li>
+    <li>Oluşan <code>github_pat_…</code> anahtarını aşağıya yapıştırın.</li>
+  </ol>
+  <div class="field">
+    <label for="tokenInput">GitHub Token</label>
+    <input id="tokenInput" type="password" placeholder="github_pat_..." autocomplete="off" />
+  </div>
+  <div class="field">
+    <label><input type="checkbox" id="rememberToken" style="width:auto;margin-right:.4rem" checked />Bu tarayıcıda beni hatırla</label>
+  </div>
+  <details style="margin-bottom:1rem">
+    <summary class="muted" style="cursor:pointer">Gelişmiş: depo ayarları</summary>
+    <div class="grid2" style="margin-top:.8rem">
+      <div class="field"><label>Depo sahibi</label><input id="cfgOwner" /></div>
+      <div class="field"><label>Depo adı</label><input id="cfgRepo" /></div>
+      <div class="field"><label>Dal (branch)</label><input id="cfgBranch" /></div>
+      <div class="field"><label>Site klasörü</label><input id="cfgBase" /></div>
+    </div>
+  </details>
+  <button class="btn btn--primary" id="loginBtn" style="width:100%">Giriş Yap</button>
+</section>
+
+<!-- ==================== PANEL ==================== -->
+<main class="wrap hidden" id="panelView">
+
+  <div class="tabs">
+    <button data-tab="projects" class="active">Projeler</button>
+    <button data-tab="site">Site İçeriği</button>
+  </div>
+
+  <!-- ---- PROJELER ---- -->
+  <section id="tab-projects">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+        <h3 style="margin:0">Projeler <span class="pill" id="pCount"></span></h3>
+        <button class="btn btn--accent" id="addProjectBtn">+ Yeni Proje</button>
+      </div>
+      <p class="muted" style="margin:.6rem 0 1rem">Sıralamayı ok tuşlarıyla değiştirin. Değişiklikler
+        “Projeleri Yayınla” butonuna basınca siteye işlenir.</p>
+      <div class="plist" id="plist"></div>
+      <div class="savebar">
+        <button class="btn btn--primary" id="saveProjectsBtn">Projeleri Yayınla</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---- SİTE İÇERİĞİ ---- -->
+  <section id="tab-site" class="hidden">
+    <div class="card">
+      <h3>Giriş (Hero) Bölümü</h3>
+      <div class="field"><label>Üst başlık</label><input id="sHeroKicker" /></div>
+      <div class="grid2">
+        <div class="field"><label>Başlık 1. satır</label><input id="sHeroLine1" /></div>
+        <div class="field"><label>Başlık 2. satır (vurgulu)</label><input id="sHeroLine2" /></div>
+        <div class="field"><label>Başlık 3. satır</label><input id="sHeroLine3" /></div>
+      </div>
+      <div class="field"><label>Tanıtım metni</label><textarea id="sHeroText"></textarea></div>
+    </div>
+
+    <div class="card">
+      <h3>Hakkımızda</h3>
+      <div class="field"><label>Başlık</label><input id="sAboutTitle" /></div>
+      <div class="field"><label>Metin</label><textarea id="sAboutText"></textarea></div>
+      <div class="field"><label>İstatistikler</label><div class="rowlist" id="statsList"></div>
+        <div style="margin-top:.6rem"><button class="btn btn--sm" id="addStatBtn">+ İstatistik ekle</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Hizmetler</h3>
+      <div class="rowlist" id="servicesEdit"></div>
+      <div style="margin-top:.6rem"><button class="btn btn--sm" id="addServiceBtn">+ Hizmet ekle</button></div>
+    </div>
+
+    <div class="card">
+      <h3>İletişim &amp; Alt Bilgi</h3>
+      <div class="grid2">
+        <div class="field"><label>E-posta</label><input id="sEmail" /></div>
+        <div class="field"><label>Telefon</label><input id="sPhone" /></div>
+      </div>
+      <div class="field"><label>Adres</label><input id="sAddress" /></div>
+      <div class="field"><label>Instagram bağlantısı</label><input id="sInstagram" /></div>
+      <div class="field"><label>Alt bilgi (şirket ünvanı)</label><input id="sFooter" /></div>
+    </div>
+
+    <div class="savebar">
+      <button class="btn btn--primary" id="saveSiteBtn">Site İçeriğini Yayınla</button>
+    </div>
+  </section>
+</main>
+
+<!-- ==================== PROJE DÜZENLE DİYALOĞU ==================== -->
+<dialog id="projectDialog">
+  <div class="card">
+    <h3 id="dlgTitle">Proje</h3>
+    <div class="grid2">
+      <div class="field"><label>Proje adı *</label><input id="fTitle" /></div>
+      <div class="field"><label>Kategori *</label>
+        <input id="fCategory" list="catList" placeholder="Mimarlık / İnşaat / Akustik / İç Mimari" />
+        <datalist id="catList">
+          <option>Mimarlık</option><option>İnşaat</option><option>Akustik</option><option>İç Mimari</option>
+        </datalist>
+      </div>
+      <div class="field"><label>Konum</label><input id="fLocation" /></div>
+      <div class="field"><label>Yıl</label><input id="fYear" /></div>
+    </div>
+    <div class="field"><label>Açıklama</label><textarea id="fDesc"></textarea></div>
+    <div class="field">
+      <label>Görsel</label>
+      <input type="file" id="fImage" accept="image/*" />
+      <div class="hint">JPEG/PNG otomatik olarak en fazla 1600&nbsp;px genişliğe küçültülür. Görsel, “Projeleri Yayınla” denince depoya yüklenir.</div>
+      <div class="imgprev"><img id="fPreview" alt="" class="hidden" /><span class="none" id="fNoImg">Görsel seçilmedi</span></div>
+    </div>
+    <div class="savebar">
+      <button class="btn" id="dlgCancel">Vazgeç</button>
+      <button class="btn btn--primary" id="dlgSave">Tamam</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="status" id="status"></div>
+
+<script>
+(function () {
+"use strict";
+
+/* ================= Yapılandırma ================= */
+
+var DEFAULT_CFG = {
+  owner: "aligokten",
+  repo: "DWG-3D-Viewer",
+  branch: "main",
+  base: "saggplus"          // site kök klasörü (depo içinde)
+};
+var LS_CFG = "saggplus_admin_cfg";
+var LS_TOKEN = "saggplus_admin_token";
+
+var cfg = loadCfg();
+var token = null;
+
+function loadCfg() {
+  try {
+    var raw = localStorage.getItem(LS_CFG);
+    if (raw) return Object.assign({}, DEFAULT_CFG, JSON.parse(raw));
+  } catch (e) {}
+  return Object.assign({}, DEFAULT_CFG);
+}
+
+/* ================= Küçük yardımcılar ================= */
+
+function $(s){ return document.querySelector(s); }
+function $all(s){ return Array.from(document.querySelectorAll(s)); }
+function esc(s){
+  return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+var statusEl = $("#status"), statusTimer = null;
+function toast(msg, kind, sticky) {
+  statusEl.textContent = msg;
+  statusEl.className = "status show" + (kind ? " " + kind : "");
+  clearTimeout(statusTimer);
+  if (!sticky) statusTimer = setTimeout(function(){ statusEl.className = "status"; }, 4200);
+}
+
+/* UTF-8 <-> base64 */
+function b64EncodeUtf8(str) {
+  var bytes = new TextEncoder().encode(str), bin = "";
+  bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+  return btoa(bin);
+}
+function b64DecodeUtf8(b64) {
+  var bin = atob(b64.replace(/\n/g, "")), bytes = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+
+/* ================= GitHub API ================= */
+
+function gh(path, opts) {
+  opts = opts || {};
+  opts.headers = Object.assign({
+    "Authorization": "Bearer " + token,
+    "Accept": "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28"
+  }, opts.headers || {});
+  return fetch("https://api.github.com" + path, opts).then(function (r) {
+    if (r.status === 401) throw new Error("Token geçersiz ya da süresi dolmuş (401).");
+    if (r.status === 403) throw new Error("Yetki reddedildi (403). Token izinlerini kontrol edin.");
+    if (r.status === 404 && opts.allow404) return null;
+    if (!r.ok) return r.json().catch(function(){ return {}; }).then(function (j) {
+      throw new Error("GitHub API hatası " + r.status + (j.message ? ": " + j.message : ""));
+    });
+    return r.status === 204 ? null : r.json();
+  });
+}
+
+function contentPath(rel) {
+  return "/repos/" + cfg.owner + "/" + cfg.repo + "/contents/" +
+    (cfg.base ? cfg.base + "/" : "") + rel;
+}
+
+function getFile(rel) {
+  return gh(contentPath(rel) + "?ref=" + encodeURIComponent(cfg.branch), { allow404: true });
+}
+
+function putFile(rel, base64Content, message, sha) {
+  var body = { message: message, content: base64Content, branch: cfg.branch };
+  if (sha) body.sha = sha;
+  return gh(contentPath(rel), { method: "PUT", body: JSON.stringify(body) });
+}
+
+function saveJSON(rel, obj, message) {
+  return getFile(rel).then(function (existing) {
+    return putFile(rel, b64EncodeUtf8(JSON.stringify(obj, null, 2) + "\n"),
+      message, existing && existing.sha);
+  });
+}
+
+/* ================= Giriş ================= */
+
+var loginView = $("#loginView"), panelView = $("#panelView");
+
+$("#cfgOwner").value = cfg.owner;
+$("#cfgRepo").value = cfg.repo;
+$("#cfgBranch").value = cfg.branch;
+$("#cfgBase").value = cfg.base;
+$("#repoHintName").textContent = cfg.owner + "/" + cfg.repo;
+
+$("#loginBtn").addEventListener("click", doLogin);
+$("#tokenInput").addEventListener("keydown", function(e){ if (e.key === "Enter") doLogin(); });
+
+function doLogin() {
+  var t = $("#tokenInput").value.trim();
+  if (!t) { toast("Lütfen token girin.", "err"); return; }
+  cfg = {
+    owner: $("#cfgOwner").value.trim() || DEFAULT_CFG.owner,
+    repo: $("#cfgRepo").value.trim() || DEFAULT_CFG.repo,
+    branch: $("#cfgBranch").value.trim() || DEFAULT_CFG.branch,
+    base: $("#cfgBase").value.trim().replace(/^\/+|\/+$/g, "")
+  };
+  localStorage.setItem(LS_CFG, JSON.stringify(cfg));
+  token = t;
+  $("#loginBtn").disabled = true;
+  toast("Doğrulanıyor…");
+  gh("/repos/" + cfg.owner + "/" + cfg.repo).then(function (repo) {
+    if (!repo.permissions || !repo.permissions.push) {
+      throw new Error("Bu token'ın depoya yazma izni yok. Contents: Read and write izni verin.");
+    }
+    if ($("#rememberToken").checked) localStorage.setItem(LS_TOKEN, t);
+    enterPanel(repo);
+  }).catch(function (e) {
+    toast(e.message, "err", true);
+  }).finally(function(){ $("#loginBtn").disabled = false; });
+}
+
+var savedToken = localStorage.getItem(LS_TOKEN);
+if (savedToken) {
+  token = savedToken;
+  gh("/repos/" + cfg.owner + "/" + cfg.repo)
+    .then(enterPanel)
+    .catch(function(){ token = null; localStorage.removeItem(LS_TOKEN); });
+}
+
+$("#logoutBtn").addEventListener("click", function () {
+  localStorage.removeItem(LS_TOKEN);
+  location.reload();
+});
+
+function enterPanel(repo) {
+  loginView.classList.add("hidden");
+  panelView.classList.remove("hidden");
+  $("#logoutBtn").classList.remove("hidden");
+  $("#who").textContent = repo.full_name + " · " + cfg.branch;
+  loadAll();
+}
+
+/* ================= Veri yükleme ================= */
+
+var projects = [];       // {id,title,category,location,year,description,image,_newFile?}
+var projectsSha = null;
+var site = null;
+var siteSha = null;
+
+function loadAll() {
+  toast("İçerik yükleniyor…");
+  Promise.all([getFile("data/projects.json"), getFile("data/site.json")])
+    .then(function (res) {
+      var pj = res[0], st = res[1];
+      projects = pj ? (JSON.parse(b64DecodeUtf8(pj.content)).projects || []) : [];
+      projectsSha = pj && pj.sha;
+      site = st ? JSON.parse(b64DecodeUtf8(st.content)) : {};
+      siteSha = st && st.sha;
+      renderProjects();
+      fillSiteForm();
+      toast("Hazır.", "ok");
+    })
+    .catch(function (e) { toast(e.message, "err", true); });
+}
+
+/* ================= Projeler sekmesi ================= */
+
+var plist = $("#plist");
+
+function renderProjects() {
+  $("#pCount").textContent = projects.length + " proje";
+  if (!projects.length) {
+    plist.innerHTML = '<p class="muted">Henüz proje yok. “+ Yeni Proje” ile başlayın.</p>';
+    return;
+  }
+  plist.innerHTML = projects.map(function (p, i) {
+    var src = p._newFile ? p._preview : (p.image || "");
+    return '<div class="pitem" data-i="' + i + '">' +
+      '<img src="' + esc(src) + '" alt="" onerror="this.style.visibility=\'hidden\'" />' +
+      '<div><div class="t">' + esc(p.title) + (p._newFile ? ' <span class="pill">yeni görsel</span>' : "") + '</div>' +
+      '<div class="m">' + esc(p.category) + " · " + esc(p.location) + " · " + esc(p.year) + "</div></div>" +
+      '<div class="ops">' +
+        '<button class="btn btn--sm" data-op="up" title="Yukarı">↑</button>' +
+        '<button class="btn btn--sm" data-op="down" title="Aşağı">↓</button>' +
+        '<button class="btn btn--sm" data-op="edit">Düzenle</button>' +
+        '<button class="btn btn--sm btn--danger" data-op="del">Sil</button>' +
+      "</div></div>";
+  }).join("");
+}
+
+plist.addEventListener("click", function (e) {
+  var btn = e.target.closest("button[data-op]");
+  if (!btn) return;
+  var i = parseInt(btn.closest(".pitem").getAttribute("data-i"), 10);
+  var op = btn.getAttribute("data-op");
+  if (op === "up" && i > 0) {
+    projects.splice(i - 1, 0, projects.splice(i, 1)[0]); renderProjects();
+  } else if (op === "down" && i < projects.length - 1) {
+    projects.splice(i + 1, 0, projects.splice(i, 1)[0]); renderProjects();
+  } else if (op === "del") {
+    if (confirm('"' + projects[i].title + '" projesi silinsin mi?')) {
+      projects.splice(i, 1); renderProjects();
+      toast("Silindi. Kalıcı olması için “Projeleri Yayınla”ya basın.");
+    }
+  } else if (op === "edit") {
+    openDialog(i);
+  }
+});
+
+/* ---- proje diyaloğu ---- */
+
+var dlg = $("#projectDialog");
+var editIndex = -1;          // -1: yeni
+var pendingFile = null;      // {blob, ext, previewUrl}
+
+$("#addProjectBtn").addEventListener("click", function(){ openDialog(-1); });
+$("#dlgCancel").addEventListener("click", function(){ dlg.close(); });
+
+function openDialog(i) {
+  editIndex = i;
+  pendingFile = null;
+  var p = i >= 0 ? projects[i] : {};
+  $("#dlgTitle").textContent = i >= 0 ? "Projeyi Düzenle" : "Yeni Proje";
+  $("#fTitle").value = p.title || "";
+  $("#fCategory").value = p.category || "";
+  $("#fLocation").value = p.location || "";
+  $("#fYear").value = p.year || "";
+  $("#fDesc").value = p.description || "";
+  $("#fImage").value = "";
+  var prev = $("#fPreview");
+  if (p._preview || p.image) {
+    prev.src = p._preview || p.image;
+    prev.classList.remove("hidden");
+    $("#fNoImg").classList.add("hidden");
+  } else {
+    prev.classList.add("hidden");
+    $("#fNoImg").classList.remove("hidden");
+  }
+  dlg.showModal();
+}
+
+$("#fImage").addEventListener("change", function () {
+  var file = this.files && this.files[0];
+  if (!file) return;
+  processImage(file).then(function (res) {
+    pendingFile = res;
+    var prev = $("#fPreview");
+    prev.src = res.previewUrl;
+    prev.classList.remove("hidden");
+    $("#fNoImg").classList.add("hidden");
+  }).catch(function (e) { toast("Görsel işlenemedi: " + e.message, "err"); });
+});
+
+/* Görseli canvas ile küçült (SVG'ler olduğu gibi kalır). */
+function processImage(file) {
+  if (file.type === "image/svg+xml") {
+    return blobToDataUrl(file).then(function (url) {
+      return { blob: file, ext: "svg", previewUrl: url };
+    });
+  }
+  return blobToDataUrl(file).then(function (dataUrl) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () {
+        var MAX = 1600;
+        var scale = Math.min(1, MAX / Math.max(img.width, img.height));
+        var w = Math.round(img.width * scale), h = Math.round(img.height * scale);
+        var canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        canvas.toBlob(function (blob) {
+          if (!blob) { reject(new Error("dönüştürme başarısız")); return; }
+          resolve({ blob: blob, ext: "jpg", previewUrl: canvas.toDataURL("image/jpeg", 0.7) });
+        }, "image/jpeg", 0.85);
+      };
+      img.onerror = function(){ reject(new Error("dosya okunamadı")); };
+      img.src = dataUrl;
+    });
+  });
+}
+
+function blobToDataUrl(blob) {
+  return new Promise(function (resolve, reject) {
+    var fr = new FileReader();
+    fr.onload = function(){ resolve(fr.result); };
+    fr.onerror = function(){ reject(new Error("okuma hatası")); };
+    fr.readAsDataURL(blob);
+  });
+}
+
+$("#dlgSave").addEventListener("click", function () {
+  var title = $("#fTitle").value.trim();
+  var category = $("#fCategory").value.trim();
+  if (!title || !category) { toast("Proje adı ve kategori zorunludur.", "err"); return; }
+  var p = editIndex >= 0 ? projects[editIndex] : {
+    id: "p" + Date.now().toString(36),
+    image: ""
+  };
+  p.title = title;
+  p.category = category;
+  p.location = $("#fLocation").value.trim();
+  p.year = $("#fYear").value.trim();
+  p.description = $("#fDesc").value.trim();
+  if (pendingFile) {
+    p._newFile = pendingFile;
+    p._preview = pendingFile.previewUrl;
+  }
+  if (editIndex < 0) projects.push(p);
+  dlg.close();
+  renderProjects();
+  toast("Kaydedildi. Siteye işlemek için “Projeleri Yayınla”ya basın.");
+});
+
+/* ---- yayınla ---- */
+
+$("#saveProjectsBtn").addEventListener("click", function () {
+  var btn = this;
+  btn.disabled = true;
+  toast("Yayınlanıyor…", null, true);
+
+  var uploads = Promise.resolve();
+  projects.forEach(function (p) {
+    if (!p._newFile) return;
+    uploads = uploads.then(function () {
+      var safe = p.title.toLowerCase()
+        .replace(/[çÇ]/g,"c").replace(/[ğĞ]/g,"g").replace(/[ıİI]/g,"i")
+        .replace(/[öÖ]/g,"o").replace(/[şŞ]/g,"s").replace(/[üÜ]/g,"u")
+        .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40) || "proje";
+      var rel = "assets/uploads/" + Date.now().toString(36) + "-" + safe + "." + p._newFile.ext;
+      return blobToBase64(p._newFile.blob).then(function (b64) {
+        return putFile(rel, b64, "admin: gorsel yukle — " + p.title);
+      }).then(function () {
+        p.image = rel;
+        delete p._newFile; delete p._preview;
+      });
+    });
+  });
+
+  uploads.then(function () {
+    var clean = projects.map(function (p) {
+      return { id: p.id, title: p.title, category: p.category, location: p.location,
+               year: p.year, description: p.description, image: p.image };
+    });
+    return saveJSON("data/projects.json", { projects: clean }, "admin: projeleri guncelle");
+  }).then(function (res) {
+    projectsSha = res.content && res.content.sha;
+    renderProjects();
+    toast("Projeler yayınlandı. Site 1-2 dk içinde güncellenir.", "ok");
+  }).catch(function (e) {
+    toast("Hata: " + e.message, "err", true);
+  }).finally(function(){ btn.disabled = false; });
+});
+
+function blobToBase64(blob) {
+  return blobToDataUrl(blob).then(function (dataUrl) {
+    return String(dataUrl).split(",")[1];
+  });
+}
+
+/* ================= Site içeriği sekmesi ================= */
+
+function fillSiteForm() {
+  site = site || {};
+  $("#sHeroKicker").value = site.heroKicker || "";
+  $("#sHeroLine1").value = site.heroLine1 || "";
+  $("#sHeroLine2").value = site.heroLine2 || "";
+  $("#sHeroLine3").value = site.heroLine3 || "";
+  $("#sHeroText").value = site.heroText || "";
+  $("#sAboutTitle").value = site.aboutTitle || "";
+  $("#sAboutText").value = site.aboutText || "";
+  $("#sEmail").value = site.contactEmail || "";
+  $("#sPhone").value = site.contactPhone || "";
+  $("#sAddress").value = site.contactAddress || "";
+  $("#sInstagram").value = site.instagram || "";
+  $("#sFooter").value = site.footerNote || "";
+  renderStatRows();
+  renderServiceRows();
+}
+
+function renderStatRows() {
+  var wrap = $("#statsList");
+  var stats = (site && site.stats) || [];
+  wrap.innerHTML = stats.map(function (s, i) {
+    return '<div class="row" data-i="' + i + '">' +
+      '<button class="btn btn--sm btn--danger del" data-del-stat="' + i + '">Sil</button>' +
+      '<div class="grid2">' +
+        '<div class="field"><label>Değer</label><input data-stat-v="' + i + '" value="' + esc(s.value) + '" /></div>' +
+        '<div class="field"><label>Etiket</label><input data-stat-l="' + i + '" value="' + esc(s.label) + '" /></div>' +
+      "</div></div>";
+  }).join("");
+}
+
+function renderServiceRows() {
+  var wrap = $("#servicesEdit");
+  var services = (site && site.services) || [];
+  wrap.innerHTML = services.map(function (s, i) {
+    return '<div class="row" data-i="' + i + '">' +
+      '<button class="btn btn--sm btn--danger del" data-del-svc="' + i + '">Sil</button>' +
+      '<div class="field"><label>Hizmet adı</label><input data-svc-t="' + i + '" value="' + esc(s.title) + '" /></div>' +
+      '<div class="field"><label>Açıklama</label><textarea data-svc-x="' + i + '">' + esc(s.text) + "</textarea></div>" +
+      "</div>";
+  }).join("");
+}
+
+function harvestSiteForm() {
+  // Önce mevcut satır girdilerini topla
+  var stats = [];
+  $all("[data-stat-v]").forEach(function (inp) {
+    var i = inp.getAttribute("data-stat-v");
+    var label = document.querySelector('[data-stat-l="' + i + '"]');
+    if (inp.value.trim() || (label && label.value.trim()))
+      stats.push({ value: inp.value.trim(), label: label ? label.value.trim() : "" });
+  });
+  var services = [];
+  $all("[data-svc-t]").forEach(function (inp) {
+    var i = inp.getAttribute("data-svc-t");
+    var tx = document.querySelector('[data-svc-x="' + i + '"]');
+    if (inp.value.trim())
+      services.push({ title: inp.value.trim(), text: tx ? tx.value.trim() : "" });
+  });
+  return Object.assign({}, site, {
+    brand: site.brand || "SAGG+",
+    heroKicker: $("#sHeroKicker").value.trim(),
+    heroLine1: $("#sHeroLine1").value.trim(),
+    heroLine2: $("#sHeroLine2").value.trim(),
+    heroLine3: $("#sHeroLine3").value.trim(),
+    heroText: $("#sHeroText").value.trim(),
+    aboutTitle: $("#sAboutTitle").value.trim(),
+    aboutText: $("#sAboutText").value.trim(),
+    stats: stats,
+    services: services,
+    contactEmail: $("#sEmail").value.trim(),
+    contactPhone: $("#sPhone").value.trim(),
+    contactAddress: $("#sAddress").value.trim(),
+    instagram: $("#sInstagram").value.trim(),
+    footerNote: $("#sFooter").value.trim()
+  });
+}
+
+document.addEventListener("click", function (e) {
+  var ds = e.target.getAttribute && e.target.getAttribute("data-del-stat");
+  var dv = e.target.getAttribute && e.target.getAttribute("data-del-svc");
+  if (ds != null) { site = harvestSiteForm(); site.stats.splice(+ds, 1); renderStatRows(); }
+  if (dv != null) { site = harvestSiteForm(); site.services.splice(+dv, 1); renderServiceRows(); }
+});
+$("#addStatBtn").addEventListener("click", function () {
+  site = harvestSiteForm(); site.stats.push({ value: "", label: "" }); renderStatRows();
+});
+$("#addServiceBtn").addEventListener("click", function () {
+  site = harvestSiteForm(); site.services.push({ title: "", text: "" }); renderServiceRows();
+});
+
+$("#saveSiteBtn").addEventListener("click", function () {
+  var btn = this;
+  btn.disabled = true;
+  toast("Yayınlanıyor…", null, true);
+  site = harvestSiteForm();
+  saveJSON("data/site.json", site, "admin: site icerigini guncelle")
+    .then(function (res) {
+      siteSha = res.content && res.content.sha;
+      toast("Site içeriği yayınlandı. 1-2 dk içinde güncellenir.", "ok");
+    })
+    .catch(function (e) { toast("Hata: " + e.message, "err", true); })
+    .finally(function(){ btn.disabled = false; });
+});
+
+/* ================= Sekmeler ================= */
+
+$all(".tabs button").forEach(function (b) {
+  b.addEventListener("click", function () {
+    $all(".tabs button").forEach(function (x) { x.classList.remove("active"); });
+    b.classList.add("active");
+    $("#tab-projects").classList.toggle("hidden", b.dataset.tab !== "projects");
+    $("#tab-site").classList.toggle("hidden", b.dataset.tab !== "site");
+  });
+});
+
+})();
+</script>
+</body>
+</html>

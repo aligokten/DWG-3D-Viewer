@@ -1,0 +1,58 @@
+{
+  "projects": [
+    {
+      "id": "p1",
+      "title": "Zeytinlik Villası",
+      "category": "Mimarlık",
+      "location": "Milas",
+      "year": "2024",
+      "description": "Zeytin ağaçlarının arasına yerleşen, avlulu plan şemasıyla iç–dış ilişkisini güçlendiren tek katlı villa projesi.",
+      "image": "assets/p1.svg"
+    },
+    {
+      "id": "p2",
+      "title": "Bodrum Taş Ev Renovasyonu",
+      "category": "İnşaat",
+      "location": "Bodrum",
+      "year": "2023",
+      "description": "Geleneksel taş dokunun korunarak çağdaş yaşam standartlarına kavuşturulduğu anahtar teslim renovasyon.",
+      "image": "assets/p2.svg"
+    },
+    {
+      "id": "p3",
+      "title": "Kayıt Stüdyosu Akustiği",
+      "category": "Akustik",
+      "location": "Muğla",
+      "year": "2024",
+      "description": "Ölçüm, modelleme ve panel tasarımıyla profesyonel kayıt stüdyosu için bütüncül akustik çözüm.",
+      "image": "assets/p3.svg"
+    },
+    {
+      "id": "p4",
+      "title": "Ege Sahil Konutları",
+      "category": "Mimarlık",
+      "location": "Milas",
+      "year": "2023",
+      "description": "Denize kademeli yerleşen, doğal taş ve ahşabın öne çıktığı düşük yoğunluklu konut yerleşkesi.",
+      "image": "assets/p4.svg"
+    },
+    {
+      "id": "p5",
+      "title": "Atölye SAGG İç Mekân",
+      "category": "İç Mimari",
+      "location": "Milas",
+      "year": "2022",
+      "description": "Ofisimizin kendi çalışma mekânı; esnek atölye düzeni ve gün ışığına açılan galeri boşluğu.",
+      "image": "assets/p5.svg"
+    },
+    {
+      "id": "p6",
+      "title": "Amfi Konferans Salonu",
+      "category": "Akustik",
+      "location": "Muğla",
+      "year": "2022",
+      "description": "400 kişilik konferans salonunda çınlama süresinin optimize edildiği akustik tasarım ve uygulama.",
+      "image": "assets/p6.svg"
+    }
+  ]
+}
