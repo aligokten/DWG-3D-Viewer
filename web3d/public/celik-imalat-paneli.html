@@ -332,6 +332,40 @@ var BORU=[[21.3,2.3,'1/2"'],[26.9,2.3,'3/4"'],[33.7,2.6,'1"'],[42.4,2.6,'1¼"'],
 var SACK=[1,1.5,2,3,4,5,6,8,10,12,15,20];
 var DEM=[8,10,12,14,16,18,20,22,25,28,32];
 
+// --- Kaplama panelleri / levhalar (m² · ₺/m²) ---
+var BETOPAN=[8,10,12,14,16,18].map(function(t){return {id:'BETOPAN_'+t,kategori:'Panel / Levha',ad:'Betopan '+t+' mm',standart:'TS EN 634-2',kalite:'',birim:'m2',ba:+(t*1.35).toFixed(1),fv:'birim',ac:'çimento esaslı yonga levha · ₺/m²'};});
+var ALCI=[]; [['Normal (beyaz)','N'],['Su Geçirmez (yeşil)','SG'],['Yangın (kırmızı)','DF']].forEach(function(tp){ [9.5,12.5,15].forEach(function(t){ ALCI.push({id:'ALCI_'+tp[1]+'_'+t,kategori:'Panel / Levha',ad:'Alçıpan '+tp[0]+' '+t+' mm',standart:'TS EN 520',kalite:'',birim:'m2',ba:+(t*0.72).toFixed(1),fv:'birim',ac:'alçı levha · ₺/m²'}); }); });
+var BOARDEX=[6,8,10,12].map(function(t){return {id:'BOARDEX_'+t,kategori:'Panel / Levha',ad:'Boardex '+t+' mm',standart:'TS EN 12467',kalite:'',birim:'m2',ba:+(t*1.2).toFixed(1),fv:'birim',ac:'çimento esaslı levha · ₺/m²'};});
+var OSB=[9,11,18].map(function(t){return {id:'OSB_'+t,kategori:'Panel / Levha',ad:'OSB-3 '+t+' mm',standart:'TS EN 300',kalite:'',birim:'m2',ba:+(t*0.62).toFixed(1),fv:'birim',ac:'yönlendirilmiş yonga levha · ₺/m²'};});
+
+// --- Sandviç paneller (m² · ₺/m²) — TS EN 14509 ---
+var SANDVIC=[['Çatı paneli PUR/PIR 40 mm',10.5],['Çatı paneli PUR/PIR 50 mm',10.8],['Çatı paneli PUR/PIR 60 mm',11.0],['Çatı paneli PUR/PIR 80 mm',11.6],['Çatı paneli PUR/PIR 100 mm',12.0],['Cephe paneli PUR/PIR 40 mm',10.3],['Cephe paneli PUR/PIR 50 mm',10.5],['Cephe paneli PUR/PIR 60 mm',10.8],['Cephe paneli PUR/PIR 80 mm',11.3],['Cephe paneli PUR/PIR 100 mm',11.8],['Taşyünü çatı paneli 50 mm',15],['Taşyünü çatı paneli 80 mm',18],['Taşyünü çatı paneli 100 mm',21],['Taşyünü cephe paneli 50 mm',14.5],['Taşyünü cephe paneli 80 mm',17.5],['Taşyünü cephe paneli 100 mm',20.5],['Soğuk oda paneli 100 mm',12.5],['Soğuk oda paneli 150 mm',14.5],['Soğuk oda paneli 200 mm',16.5]].map(function(x,i){return {id:'SNDV_'+i,kategori:'Sandviç Panel',ad:x[0],standart:'TS EN 14509',kalite:'',birim:'m2',ba:x[1],fv:'birim',ac:'₺/m²'};});
+
+// --- Çatı / cephe aksesuar ve bağlantı (m / adet) ---
+var CATI_AKS=[
+  {id:'MAHYA',kategori:'Çatı / Cephe Aksesuar',ad:'Mahya kapağı (galvaniz büküm)',standart:'TS EN 10346',kalite:'',birim:'m',ba:1.6,fv:'birim',ac:'₺/m'},
+  {id:'SACAK',kategori:'Çatı / Cephe Aksesuar',ad:'Saçak / denizlik bükümü',standart:'TS EN 10346',kalite:'',birim:'m',ba:1.4,fv:'birim',ac:'₺/m'},
+  {id:'KOSE_BUKUM',kategori:'Çatı / Cephe Aksesuar',ad:'Köşe / kenar bükümü (flashing)',standart:'TS EN 10346',kalite:'',birim:'m',ba:1.3,fv:'birim',ac:'₺/m'},
+  {id:'PANEL_VIDA',kategori:'Çatı / Cephe Aksesuar',ad:'Panel matkap uçlu vida (contalı)',standart:'TS EN ISO 15480',kalite:'',birim:'adet',ba:0,fv:'birim'},
+  {id:'BUTIL',kategori:'Çatı / Cephe Aksesuar',ad:'Butil sızdırmazlık bandı',standart:'',kalite:'',birim:'m',ba:0,fv:'birim',ac:'₺/m'}
+];
+
+// --- Yağmur oluğu sistemi (m / adet) ---
+var OLUK=[
+  {id:'OLUK_GALV33',kategori:'Yağmur Oluğu Sistemi',ad:'Yağmur oluğu galvaniz (gelişim 33 cm · 0.6 mm)',standart:'TS EN 612',kalite:'',birim:'m',ba:1.6,fv:'birim',ac:'₺/m'},
+  {id:'OLUK_GALV40',kategori:'Yağmur Oluğu Sistemi',ad:'Yağmur oluğu galvaniz (gelişim 40 cm · 0.6 mm)',standart:'TS EN 612',kalite:'',birim:'m',ba:1.9,fv:'birim',ac:'₺/m'},
+  {id:'OLUK_BOYALI',kategori:'Yağmur Oluğu Sistemi',ad:'Yağmur oluğu boyalı galvaniz (gelişim 33 cm)',standart:'TS EN 612',kalite:'',birim:'m',ba:1.6,fv:'birim',ac:'₺/m'},
+  {id:'OLUK_PVC',kategori:'Yağmur Oluğu Sistemi',ad:'Yağmur oluğu PVC (125 mm)',standart:'TS EN 607',kalite:'',birim:'m',ba:0.9,fv:'birim',ac:'₺/m'},
+  {id:'INIS_80',kategori:'Yağmur Oluğu Sistemi',ad:'İniş borusu galvaniz Ø80 mm',standart:'TS EN 612',kalite:'',birim:'m',ba:1.0,fv:'birim',ac:'₺/m'},
+  {id:'INIS_100',kategori:'Yağmur Oluğu Sistemi',ad:'İniş borusu galvaniz Ø100 mm',standart:'TS EN 612',kalite:'',birim:'m',ba:1.25,fv:'birim',ac:'₺/m'},
+  {id:'INIS_120',kategori:'Yağmur Oluğu Sistemi',ad:'İniş borusu galvaniz Ø120 mm',standart:'TS EN 612',kalite:'',birim:'m',ba:1.5,fv:'birim',ac:'₺/m'},
+  {id:'INIS_PVC',kategori:'Yağmur Oluğu Sistemi',ad:'İniş borusu PVC Ø100 mm',standart:'TS EN 12200',kalite:'',birim:'m',ba:0.7,fv:'birim',ac:'₺/m'},
+  {id:'DIRSEK',kategori:'Yağmur Oluğu Sistemi',ad:'İniş borusu dirseği (adet)',standart:'TS EN 612',kalite:'',birim:'adet',ba:0.3,fv:'birim'},
+  {id:'CORTEN',kategori:'Yağmur Oluğu Sistemi',ad:'Çörten / oluk çıkış süzgeci (adet)',standart:'TS EN 612',kalite:'',birim:'adet',ba:0.3,fv:'birim'},
+  {id:'OLUK_KELEPCE',kategori:'Yağmur Oluğu Sistemi',ad:'Oluk kelepçesi / bineği (adet)',standart:'TS EN 1462',kalite:'',birim:'adet',ba:0.2,fv:'birim'},
+  {id:'INIS_KELEPCE',kategori:'Yağmur Oluğu Sistemi',ad:'İniş borusu kelepçesi (adet)',standart:'TS EN 1462',kalite:'',birim:'adet',ba:0.15,fv:'birim'}
+];
+
 var CATALOG = [].concat(
   tablo(IPE,'IPE Profil','TS EN 10365','S275JR'),
   tablo(HEA,'HEA Profil','TS EN 10365','S275JR'),
@@ -354,7 +388,8 @@ var CATALOG = [].concat(
     {id:'KUMLAMA',kategori:'Yüzey İşlem',ad:'Kumlama (Sa 2½)',standart:'TS EN ISO 8501-1',kalite:'',birim:'m2',ba:0},
     {id:'ASTAR',kategori:'Yüzey İşlem',ad:'Antikorozif astar + son kat',standart:'TS EN ISO 12944',kalite:'',birim:'m2',ba:0},
     {id:'GALVANIZ',kategori:'Yüzey İşlem',ad:'Sıcak daldırma galvaniz',standart:'TS EN ISO 1461',kalite:'',birim:'kg',ba:1}
-  ]
+  ],
+  BETOPAN, ALCI, BOARDEX, OSB, SANDVIC, CATI_AKS, OLUK
 );
 var KATEGORILER = CATALOG.map(function(k){return k.kategori;}).filter(function(v,i,a){return a.indexOf(v)===i;});
 function catBul(id){ for(var i=0;i<CATALOG.length;i++) if(CATALOG[i].id===id) return CATALOG[i]; return null; }
@@ -609,7 +644,11 @@ function mzRow(k){
 
 /* ---------- İŞÇİLİK ---------- */
 var ISC_ONERI=[
-  {ad:'Montaj işçiliği (şantiye)',kategori:'İşçilik',birim:'kg',miktar:0,birimFiyat:4},
+  {ad:'Çelik montaj işçiliği (şantiye)',kategori:'İşçilik',birim:'kg',miktar:0,birimFiyat:4},
+  {ad:'Sandviç panel montajı',kategori:'İşçilik',birim:'m²',miktar:0,birimFiyat:110},
+  {ad:'Betopan / Alçıpan / Boardex montajı',kategori:'İşçilik',birim:'m²',miktar:0,birimFiyat:130},
+  {ad:'Yağmur oluğu montajı',kategori:'İşçilik',birim:'m',miktar:0,birimFiyat:150},
+  {ad:'İniş borusu montajı',kategori:'İşçilik',birim:'m',miktar:0,birimFiyat:120},
   {ad:'Mobil vinç kirası',kategori:'Ekipman',birim:'gün',miktar:1,birimFiyat:8000},
   {ad:'Nakliye (tır)',kategori:'Nakliye',birim:'sefer',miktar:1,birimFiyat:12000},
   {ad:'Kumlama + boya',kategori:'Yüzey İşlem',birim:'m²',miktar:0,birimFiyat:120}
@@ -849,7 +888,7 @@ document.addEventListener('click',function(e){
   var act=el.dataset.act;
   if(act==='mz-ekle'){
     var isel=document.getElementById('mz-item'); var id=isel&&isel.value; var c=catBul(id); if(!c)return;
-    mut(function(p){ p.kalemler.push({id:uid(),pozNo:'',aciklama:'',katalogId:c.id,ad:c.ad,standart:c.standart,kalite:c.kalite||'S275JR',birim:c.birim,ba:c.ba,adet:1,boy:6,alan:c.birim==='m2'?1:0,miktarKg:c.birim==='kg'?100:0,miktarAdet:c.birim==='adet'?10:1,fireYuzde:p.varsayilanFire,birimFiyat:0,fiyatTipi:c.birim==='adet'?'birim':'kg',durum:'Bekliyor'}); });
+    mut(function(p){ p.kalemler.push({id:uid(),pozNo:'',aciklama:'',katalogId:c.id,ad:c.ad,standart:c.standart,kalite:c.kalite||'S275JR',birim:c.birim,ba:c.ba,adet:1,boy:6,alan:c.birim==='m2'?1:0,miktarKg:c.birim==='kg'?100:0,miktarAdet:c.birim==='adet'?10:1,fireYuzde:p.varsayilanFire,birimFiyat:0,fiyatTipi:c.fv?c.fv:(c.birim==='adet'?'birim':'kg'),durum:'Bekliyor'}); });
     mzFilter=''; render();
   } else if(act==='mz-elle'){ mut(function(p){ p.kalemler.push({id:uid(),pozNo:'',aciklama:'',katalogId:'',ad:'',standart:'',kalite:'S275JR',birim:'m',ba:0,adet:1,boy:6,alan:0,miktarKg:0,miktarAdet:1,fireYuzde:p.varsayilanFire,birimFiyat:0,fiyatTipi:'kg',durum:'Bekliyor'}); }); render();
   } else if(act==='isc-ekle'){ mut(function(p){ p.iscilikler.push({id:uid(),ad:'',kategori:'İşçilik',birim:'saat',miktar:1,birimFiyat:0}); }); render();

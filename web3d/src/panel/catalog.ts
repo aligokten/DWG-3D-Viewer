@@ -24,6 +24,8 @@ export interface KatalogKalemi {
   /** m için kg/m, m² için kg/m², adet için kg/adet, kg için 1. */
   birimAgirlik: number;
   aciklama?: string;
+  /** Fiyatın varsayılan girildiği taban: "kg" (₺/kg) veya "birim" (₺/m, ₺/m², ₺/adet). */
+  fiyatVarsayilan?: "kg" | "birim";
 }
 
 /** Türkiye'de yapı çeliğinde yaygın kalite sınıfları (TS EN 10025-2). */
@@ -287,6 +289,79 @@ const YUZEY: KatalogKalemi[] = [
 ];
 
 // ---------------------------------------------------------------------------
+// Kaplama panelleri, sandviç paneller, çatı/cephe aksesuar ve yağmur oluğu
+// ---------------------------------------------------------------------------
+
+// Kaplama panelleri / levhalar — m² bazlı, ₺/m² fiyatlanır
+const PANEL_LEVHA: KatalogKalemi[] = [
+  ...[8, 10, 12, 14, 16, 18].map((t): KatalogKalemi => ({
+    id: `BETOPAN_${t}`, kategori: "Panel / Levha", ad: `Betopan ${t} mm`,
+    standart: "TS EN 634-2", birim: "m2", birimAgirlik: +(t * 1.35).toFixed(1),
+    fiyatVarsayilan: "birim", aciklama: "çimento esaslı yonga levha · ₺/m²",
+  })),
+  ...([["Normal (beyaz)", "N"], ["Su Geçirmez (yeşil)", "SG"], ["Yangın (kırmızı)", "DF"]] as const).flatMap(
+    ([tip, kod]) => [9.5, 12.5, 15].map((t): KatalogKalemi => ({
+      id: `ALCI_${kod}_${t}`, kategori: "Panel / Levha", ad: `Alçıpan ${tip} ${t} mm`,
+      standart: "TS EN 520", birim: "m2", birimAgirlik: +(t * 0.72).toFixed(1),
+      fiyatVarsayilan: "birim", aciklama: "alçı levha · ₺/m²",
+    })),
+  ),
+  ...[6, 8, 10, 12].map((t): KatalogKalemi => ({
+    id: `BOARDEX_${t}`, kategori: "Panel / Levha", ad: `Boardex ${t} mm`,
+    standart: "TS EN 12467", birim: "m2", birimAgirlik: +(t * 1.2).toFixed(1),
+    fiyatVarsayilan: "birim", aciklama: "çimento esaslı levha · ₺/m²",
+  })),
+  ...[9, 11, 18].map((t): KatalogKalemi => ({
+    id: `OSB_${t}`, kategori: "Panel / Levha", ad: `OSB-3 ${t} mm`,
+    standart: "TS EN 300", birim: "m2", birimAgirlik: +(t * 0.62).toFixed(1),
+    fiyatVarsayilan: "birim", aciklama: "yönlendirilmiş yonga levha · ₺/m²",
+  })),
+];
+
+// Sandviç paneller — TS EN 14509, m² bazlı
+const SANDVIC_LISTE: Array<[string, number]> = [
+  ["Çatı paneli PUR/PIR 40 mm", 10.5], ["Çatı paneli PUR/PIR 50 mm", 10.8],
+  ["Çatı paneli PUR/PIR 60 mm", 11.0], ["Çatı paneli PUR/PIR 80 mm", 11.6],
+  ["Çatı paneli PUR/PIR 100 mm", 12.0], ["Cephe paneli PUR/PIR 40 mm", 10.3],
+  ["Cephe paneli PUR/PIR 50 mm", 10.5], ["Cephe paneli PUR/PIR 60 mm", 10.8],
+  ["Cephe paneli PUR/PIR 80 mm", 11.3], ["Cephe paneli PUR/PIR 100 mm", 11.8],
+  ["Taşyünü çatı paneli 50 mm", 15], ["Taşyünü çatı paneli 80 mm", 18],
+  ["Taşyünü çatı paneli 100 mm", 21], ["Taşyünü cephe paneli 50 mm", 14.5],
+  ["Taşyünü cephe paneli 80 mm", 17.5], ["Taşyünü cephe paneli 100 mm", 20.5],
+  ["Soğuk oda paneli 100 mm", 12.5], ["Soğuk oda paneli 150 mm", 14.5],
+  ["Soğuk oda paneli 200 mm", 16.5],
+];
+const SANDVIC: KatalogKalemi[] = SANDVIC_LISTE.map(([ad, kg], i): KatalogKalemi => ({
+  id: `SNDV_${i}`, kategori: "Sandviç Panel", ad, standart: "TS EN 14509",
+  birim: "m2", birimAgirlik: kg, fiyatVarsayilan: "birim", aciklama: "₺/m²",
+}));
+
+// Çatı / cephe aksesuar ve bağlantı
+const CATI_AKS: KatalogKalemi[] = [
+  { id: "MAHYA", kategori: "Çatı / Cephe Aksesuar", ad: "Mahya kapağı (galvaniz büküm)", standart: "TS EN 10346", birim: "m", birimAgirlik: 1.6, fiyatVarsayilan: "birim", aciklama: "₺/m" },
+  { id: "SACAK", kategori: "Çatı / Cephe Aksesuar", ad: "Saçak / denizlik bükümü", standart: "TS EN 10346", birim: "m", birimAgirlik: 1.4, fiyatVarsayilan: "birim", aciklama: "₺/m" },
+  { id: "KOSE_BUKUM", kategori: "Çatı / Cephe Aksesuar", ad: "Köşe / kenar bükümü (flashing)", standart: "TS EN 10346", birim: "m", birimAgirlik: 1.3, fiyatVarsayilan: "birim", aciklama: "₺/m" },
+  { id: "PANEL_VIDA", kategori: "Çatı / Cephe Aksesuar", ad: "Panel matkap uçlu vida (contalı)", standart: "TS EN ISO 15480", birim: "adet", birimAgirlik: 0, fiyatVarsayilan: "birim" },
+  { id: "BUTIL", kategori: "Çatı / Cephe Aksesuar", ad: "Butil sızdırmazlık bandı", standart: "—", birim: "m", birimAgirlik: 0, fiyatVarsayilan: "birim", aciklama: "₺/m" },
+];
+
+// Yağmur oluğu sistemi
+const OLUK: KatalogKalemi[] = [
+  { id: "OLUK_GALV33", kategori: "Yağmur Oluğu Sistemi", ad: "Yağmur oluğu galvaniz (gelişim 33 cm · 0.6 mm)", standart: "TS EN 612", birim: "m", birimAgirlik: 1.6, fiyatVarsayilan: "birim", aciklama: "₺/m" },
+  { id: "OLUK_GALV40", kategori: "Yağmur Oluğu Sistemi", ad: "Yağmur oluğu galvaniz (gelişim 40 cm · 0.6 mm)", standart: "TS EN 612", birim: "m", birimAgirlik: 1.9, fiyatVarsayilan: "birim", aciklama: "₺/m" },
+  { id: "OLUK_BOYALI", kategori: "Yağmur Oluğu Sistemi", ad: "Yağmur oluğu boyalı galvaniz (gelişim 33 cm)", standart: "TS EN 612", birim: "m", birimAgirlik: 1.6, fiyatVarsayilan: "birim", aciklama: "₺/m" },
+  { id: "OLUK_PVC", kategori: "Yağmur Oluğu Sistemi", ad: "Yağmur oluğu PVC (125 mm)", standart: "TS EN 607", birim: "m", birimAgirlik: 0.9, fiyatVarsayilan: "birim", aciklama: "₺/m" },
+  { id: "INIS_80", kategori: "Yağmur Oluğu Sistemi", ad: "İniş borusu galvaniz Ø80 mm", standart: "TS EN 612", birim: "m", birimAgirlik: 1.0, fiyatVarsayilan: "birim", aciklama: "₺/m" },
+  { id: "INIS_100", kategori: "Yağmur Oluğu Sistemi", ad: "İniş borusu galvaniz Ø100 mm", standart: "TS EN 612", birim: "m", birimAgirlik: 1.25, fiyatVarsayilan: "birim", aciklama: "₺/m" },
+  { id: "INIS_120", kategori: "Yağmur Oluğu Sistemi", ad: "İniş borusu galvaniz Ø120 mm", standart: "TS EN 612", birim: "m", birimAgirlik: 1.5, fiyatVarsayilan: "birim", aciklama: "₺/m" },
+  { id: "INIS_PVC", kategori: "Yağmur Oluğu Sistemi", ad: "İniş borusu PVC Ø100 mm", standart: "TS EN 12200", birim: "m", birimAgirlik: 0.7, fiyatVarsayilan: "birim", aciklama: "₺/m" },
+  { id: "DIRSEK", kategori: "Yağmur Oluğu Sistemi", ad: "İniş borusu dirseği (adet)", standart: "TS EN 612", birim: "adet", birimAgirlik: 0.3, fiyatVarsayilan: "birim" },
+  { id: "CORTEN", kategori: "Yağmur Oluğu Sistemi", ad: "Çörten / oluk çıkış süzgeci (adet)", standart: "TS EN 612", birim: "adet", birimAgirlik: 0.3, fiyatVarsayilan: "birim" },
+  { id: "OLUK_KELEPCE", kategori: "Yağmur Oluğu Sistemi", ad: "Oluk kelepçesi / bineği (adet)", standart: "TS EN 1462", birim: "adet", birimAgirlik: 0.2, fiyatVarsayilan: "birim" },
+  { id: "INIS_KELEPCE", kategori: "Yağmur Oluğu Sistemi", ad: "İniş borusu kelepçesi (adet)", standart: "TS EN 1462", birim: "adet", birimAgirlik: 0.15, fiyatVarsayilan: "birim" },
+];
+
+// ---------------------------------------------------------------------------
 // Tam katalog
 // ---------------------------------------------------------------------------
 
@@ -304,6 +379,10 @@ export const KATALOG: KatalogKalemi[] = [
   ...demirKalemleri(),
   ...SARF,
   ...YUZEY,
+  ...PANEL_LEVHA,
+  ...SANDVIC,
+  ...CATI_AKS,
+  ...OLUK,
 ];
 
 /** Katalog kategorileri (arayüz gruplaması için, sırayla). */

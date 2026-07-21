@@ -17,7 +17,11 @@ const DURUM_RENK: Record<string, string> = {
 };
 
 const ONERILER: Array<Omit<IscilikKalemi, "id">> = [
-  { ad: "Montaj işçiliği (şantiye)", kategori: "İşçilik", birim: "kg", miktar: 0, birimFiyat: 4 },
+  { ad: "Çelik montaj işçiliği (şantiye)", kategori: "İşçilik", birim: "kg", miktar: 0, birimFiyat: 4 },
+  { ad: "Sandviç panel montajı", kategori: "İşçilik", birim: "m²", miktar: 0, birimFiyat: 110 },
+  { ad: "Betopan / Alçıpan / Boardex montajı", kategori: "İşçilik", birim: "m²", miktar: 0, birimFiyat: 130 },
+  { ad: "Yağmur oluğu montajı", kategori: "İşçilik", birim: "m", miktar: 0, birimFiyat: 150 },
+  { ad: "İniş borusu montajı", kategori: "İşçilik", birim: "m", miktar: 0, birimFiyat: 120 },
   { ad: "Mobil vinç kirası", kategori: "Ekipman", birim: "gün", miktar: 1, birimFiyat: 8000 },
   { ad: "Nakliye (tır)", kategori: "Nakliye", birim: "sefer", miktar: 1, birimFiyat: 12000 },
   { ad: "Kumlama + boya", kategori: "Yüzey İşlem", birim: "m²", miktar: 0, birimFiyat: 120 },

@@ -81,8 +81,9 @@ export function MalzemeTab({
     yeni.birim = kat.birim;
     yeni.birimAgirlik = kat.birimAgirlik;
     yeni.fireYuzde = proje.varsayilanFire;
-    yeni.fiyatTipi = kat.birim === "adet" ? "birim" : "kg";
+    yeni.fiyatTipi = kat.fiyatVarsayilan ?? (kat.birim === "adet" ? "birim" : "kg");
     if (kat.birim === "adet") yeni.miktarAdet = 10;
+    if (kat.birim === "m2") yeni.alan = 1;
     degistir((p) => ({ ...p, kalemler: [...p.kalemler, yeni] }));
   };
 
