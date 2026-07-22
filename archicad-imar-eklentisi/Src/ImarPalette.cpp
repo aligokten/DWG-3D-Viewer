@@ -144,7 +144,7 @@ void ImarPalette::TabloListesiniDoldur ()
     tabloListesi.DeleteItem (DG::ListBox::AllItems);
     for (const auto& t : tablolar) {
         tabloListesi.AppendItem ();
-        tabloListesi.SetItemText (DG::ListBox::BottomItem, US (t.baslik));
+        tabloListesi.SetTabItemText (tabloListesi.GetItemCount (), 1, US (t.baslik));
     }
     if (!tablolar.empty () && tabloListesi.GetSelectedItem () == 0)
         tabloListesi.SelectItem (1);
@@ -255,7 +255,7 @@ void ImarPalette::PanelResized (const DG::PanelResizeEvent& ev)
     short dv = ev.GetVerticalChange ();
 
     BeginMoveResizeItems ();
-    tabloListesi.ResizeItem (0, dv);
+    tabloListesi.Resize (0, dv);
     tabloIcerik.Resize (dh, dv);
     tabloIcerik.Move (0, 0);
     csvBtn.Move (0, dv);
