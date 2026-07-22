@@ -58,7 +58,7 @@ GSErrCode Initialize (void)
     GSFlags flags = API_PalEnabled_FloorPlan + API_PalEnabled_Section    +
                     API_PalEnabled_Detail    + API_PalEnabled_Layout     +
                     API_PalEnabled_3D        + API_PalEnabled_Elevation   +
-                    API_PalEnabled_Worksheet + API_PalEnabled_Document3D;
+                    API_PalEnabled_Worksheet;
 
     err = ACAPI_RegisterModelessWindow (
         Imar::ImarPalette::paletteRefId,
