@@ -11,8 +11,14 @@
 // =============================================================================
 //  Menu metinleri  (^32500 = komut kodu)
 // =============================================================================
+// Menu STR# formati (MenuCode_UserDef):
+//   [ ] 1. satir: menu cubugundaki ust menu basligi
+//   [ ] 2. satir: acilir menu basligi
+//   [1] 3. satir: komut (^E.. = tum pencere baglamlarinda etkin)
 'STR#' ID_ADDON_MENU "Menu metinleri" {
-/* [1] */   "Imar Hesap Paleti...            ^32500"
+/* [ ] */   "Imar Hesap"
+/* [ ] */   "Imar Hesap"
+/* [1] */   "Imar Hesap Paleti...^E3^ES^EE^EI^ED^EL^EW^ET^EM"
 }
 
 // =============================================================================
