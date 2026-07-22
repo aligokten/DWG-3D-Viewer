@@ -1,0 +1,7 @@
+// =============================================================================
+//  Bu eklentinin tum kaynaklari (eklenti adi, menu, palet diyalogu) dile
+//  bakilmaksizin her zaman yuklensin diye SABIT kaynak dosyasina tasindi:
+//      RFIX/AddOnFix.grc
+//
+//  Bu yerellestirilebilir (INT) dosya bilincli olarak bostur.
+// =============================================================================
