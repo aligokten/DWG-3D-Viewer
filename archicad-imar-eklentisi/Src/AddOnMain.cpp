@@ -29,7 +29,7 @@ static GSErrCode MenuCommandHandler (const API_MenuParams* menuParams)
 // -----------------------------------------------------------------------------
 //  CheckEnvironment: eklenti adi/aciklamasini bildirir.
 // -----------------------------------------------------------------------------
-API_AddonType __ACENV_CALL CheckEnvironment (API_EnvirParams* envir)
+API_AddonType CheckEnvironment (API_EnvirParams* envir)
 {
     RSGetIndString (&envir->addOnInfo.name, ID_ADDON_INFO, 1, ACAPI_GetOwnResModule ());
     RSGetIndString (&envir->addOnInfo.description, ID_ADDON_INFO, 2, ACAPI_GetOwnResModule ());
@@ -39,7 +39,7 @@ API_AddonType __ACENV_CALL CheckEnvironment (API_EnvirParams* envir)
 // -----------------------------------------------------------------------------
 //  RegisterInterface: menuyu kaydeder.
 // -----------------------------------------------------------------------------
-GSErrCode __ACENV_CALL RegisterInterface (void)
+GSErrCode RegisterInterface (void)
 {
     GSErrCode err = ACAPI_MenuItem_RegisterMenu (ID_ADDON_MENU, 0, MenuCode_UserDef, MenuFlag_Default);
     return err;
@@ -48,7 +48,7 @@ GSErrCode __ACENV_CALL RegisterInterface (void)
 // -----------------------------------------------------------------------------
 //  Initialize: menu isleyicisini kurar ve modeless paleti kaydeder.
 // -----------------------------------------------------------------------------
-GSErrCode __ACENV_CALL Initialize (void)
+GSErrCode Initialize (void)
 {
     GSErrCode err = ACAPI_MenuItem_InstallMenuHandler (ID_ADDON_MENU, MenuCommandHandler);
     if (err != NoError)
@@ -72,7 +72,7 @@ GSErrCode __ACENV_CALL Initialize (void)
 // -----------------------------------------------------------------------------
 //  FreeData: temizlik.
 // -----------------------------------------------------------------------------
-GSErrCode __ACENV_CALL FreeData (void)
+GSErrCode FreeData (void)
 {
     if (Imar::ImarPalette::HasInstance ())
         Imar::ImarPalette::DestroyInstance ();
