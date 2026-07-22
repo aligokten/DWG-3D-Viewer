@@ -20,7 +20,8 @@ namespace Imar {
 class ImarPalette : public DG::Palette,
                     public DG::PanelObserver,
                     public DG::ButtonItemObserver,
-                    public DG::ListBoxObserver {
+                    public DG::ListBoxObserver,
+                    public DG::CompoundItemObserver {  // AttachToAllItems/DetachFromAllItems
 public:
     static const GS::Guid  paletteGuid;
     static const Int32     paletteRefId;

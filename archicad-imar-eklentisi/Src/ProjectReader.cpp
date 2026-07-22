@@ -106,6 +106,21 @@ void ProjectReader::Siniflandir (const std::string& kategoriAdi,
 }
 
 // -----------------------------------------------------------------------------
+//  Zone kategori adini catInd (attribute index) uzerinden okur.
+//  API_ZoneType'ta dogrudan kategori adi yoktur; kategori bir Zon Kategorisi
+//  attribute'udur.
+// -----------------------------------------------------------------------------
+static GS::UniString ZoneKategoriAdi (const API_AttributeIndex& catInd)
+{
+    API_Attribute attr = {};
+    attr.header.typeID = API_ZoneCatID;
+    attr.header.index  = catInd;
+    if (ACAPI_Attribute_Get (&attr) == NoError)
+        return GS::UniString (attr.header.name);
+    return GS::UniString ();
+}
+
+// -----------------------------------------------------------------------------
 //  Kat (story) isimlerini floorInd -> ad seklinde okur.
 // -----------------------------------------------------------------------------
 static std::map<short, GS::UniString> KatIsimleriniOku ()
@@ -149,7 +164,7 @@ void ProjectReader::ZonelariOku (ProjeVerisi& veri)
 
         GS::UniString ad (element.zone.roomName);
         GS::UniString no (element.zone.roomNoStr);
-        GS::UniString kategori (element.zone.catName);
+        GS::UniString kategori = ZoneKategoriAdi (element.zone.catInd);
 
         kayit.ad       = ad.ToCStr (0, MaxUSize, CC_UTF8).Get ();
         kayit.noStr    = no.ToCStr (0, MaxUSize, CC_UTF8).Get ();
