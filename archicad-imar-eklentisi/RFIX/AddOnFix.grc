@@ -1,0 +1,79 @@
+#include "ResourceIds.hpp"
+
+// =============================================================================
+//  SABIT (fixed) kaynaklar - dile bakilmaksizin her zaman yuklenir.
+//  Eklenti adi, menu ve palet diyalogu burada tutulur (ActionCenter orneginde
+//  oldugu gibi) ki menu ve arayuz Archicad dilinden bagimsiz gorunsun.
+// =============================================================================
+
+'MDID' 32500 "Add-On Identifier" {
+        1 /* developer id */
+        1 /* local id */
+}
+
+'GICN' 10001 "AddOnIcon" {
+        "AddOnIcon"
+}
+
+// -----------------------------------------------------------------------------
+//  Eklenti adi ve aciklamasi
+// -----------------------------------------------------------------------------
+'STR#' ID_ADDON_INFO "Eklenti adi ve aciklamasi" {
+/* [1] */   "Imar Hesap"
+/* [2] */   "Planli Alanlar Imar Yonetmeligi hesap tablolari (Emsal, TAKS, YIA, Kat Irtifaki, Otopark, Siginak)"
+}
+
+// -----------------------------------------------------------------------------
+//  Menu metinleri (MenuCode_UserDef)
+//    [ ] 1. satir: menu cubugundaki ust menu basligi
+//    [ ] 2. satir: acilir menu basligi
+//    [1] 3. satir: komut (^E.. = tum pencere baglamlarinda etkin)
+// -----------------------------------------------------------------------------
+'STR#' ID_ADDON_MENU "Menu metinleri" {
+/* [ ] */   "Imar Hesap"
+/* [ ] */   "Imar Hesap"
+/* [1] */   "Imar Hesap Paleti...^E3^ES^EE^EI^ED^EL^EW^ET^EM"
+}
+
+// -----------------------------------------------------------------------------
+//  Palet (modeless) diyalogu
+//  Item sirasi ResourceIds.hpp icindeki PaletteControls sabitleriyle ayni:
+//  1..11 = etkilesimli kontroller, 12..16 = statik etiketler.
+// -----------------------------------------------------------------------------
+'GDLG' ID_PALETTE_DLG Palette | grow   0   0  620  456  "Imar Hesap" {
+/* [ 1] Ada        */  TextEdit       10   30   90   20   SmallPlain  32
+/* [ 2] Parsel     */  TextEdit      110   30   90   20   SmallPlain  32
+/* [ 3] Arsa m2    */  TextEdit      210   30  110   20   SmallPlain  16
+/* [ 4] KAKS       */  TextEdit      330   30   80   20   SmallPlain  16
+/* [ 5] TAKS       */  TextEdit      420   30   70   20   SmallPlain  16
+/* [ 6] Hesapla    */  Button        500   28  110   24   LargePlain  "Hesapla / Yenile"
+/* [ 7] TabloListe */  SingleSelList  10   72  180  340   SmallPlain  NoPartialItems  16
+/* [ 8] TabloIcerik*/  SingleSelList 200   72  410  340   SmallPlain  NoPartialItems  16
+/* [ 9] CSV        */  Button         10  420  130   24   LargePlain  "CSV Disa Aktar"
+/* [10] Durum      */  LeftText      150  424  460   18   SmallPlain  vCenter  ""
+/* [11] Ayrac      */  Separator      10   62  600    2
+/* [12] */             LeftText       10   12   90   16   SmallPlain  vCenter  "Ada No"
+/* [13] */             LeftText      110   12   90   16   SmallPlain  vCenter  "Parsel No"
+/* [14] */             LeftText      210   12  110   16   SmallPlain  vCenter  "Arsa Alani (m2)"
+/* [15] */             LeftText      330   12   80   16   SmallPlain  vCenter  "KAKS (Emsal)"
+/* [16] */             LeftText      420   12   70   16   SmallPlain  vCenter  "TAKS"
+}
+
+'DLGH' ID_PALETTE_DLG DLG_ImarPalette {
+ 1   ""   TextEdit_0
+ 2   ""   TextEdit_1
+ 3   ""   TextEdit_2
+ 4   ""   TextEdit_3
+ 5   ""   TextEdit_4
+ 6   ""   Button_0
+ 7   ""   SingleSelListBox_0
+ 8   ""   SingleSelListBox_1
+ 9   ""   Button_1
+10   ""   LeftText_0
+11   ""   Separator_0
+12   ""   LeftText_1
+13   ""   LeftText_2
+14   ""   LeftText_3
+15   ""   LeftText_4
+16   ""   LeftText_5
+}
