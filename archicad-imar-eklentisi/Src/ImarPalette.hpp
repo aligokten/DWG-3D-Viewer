@@ -44,9 +44,9 @@ private:
     // --- kontroller (GDLG kaynagindaki item'lara baglanir) ---
     DG::TextEdit          adaEdit;
     DG::TextEdit          parselEdit;
-    DG::RealEdit          arsaEdit;
-    DG::RealEdit          kaksEdit;
-    DG::RealEdit          taksEdit;
+    DG::TextEdit          arsaEdit;   // sayi olarak parse edilir
+    DG::TextEdit          kaksEdit;   // sayi olarak parse edilir
+    DG::TextEdit          taksEdit;   // sayi olarak parse edilir
     DG::Button            hesaplaBtn;
     DG::SingleSelListBox  tabloListesi;
     DG::SingleSelListBox  tabloIcerik;

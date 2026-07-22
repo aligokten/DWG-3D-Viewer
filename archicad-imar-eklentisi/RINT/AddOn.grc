@@ -9,8 +9,7 @@
 }
 
 // =============================================================================
-//  Menu metinleri
-//  ^E... kisayol tanimlari; ^32500 komut kodu.
+//  Menu metinleri  (^32500 = komut kodu)
 // =============================================================================
 'STR#' ID_ADDON_MENU "Menu metinleri" {
 /* [1] */   "Imar Hesap Paleti...            ^32500"
@@ -18,44 +17,45 @@
 
 // =============================================================================
 //  Palet (modeless) diyalogu
-//  ONEMLI: Buradaki item sirasi (indeks) ResourceIds.hpp icindeki
-//  PaletteControls enum'u ile BIREBIR aynidir (1..11 = etkilesimli kontroller,
-//  12+ = statik etiketler).
+//  Item sirasi ResourceIds.hpp icindeki PaletteControls sabitleriyle ayni:
+//  1..11 = etkilesimli kontroller, 12..16 = statik etiketler.
+//  Sozdizimi DevKit ornekleriyle (AddOnObject_Manager, Communication_Client)
+//  birebir dogrulanmistir.
 // =============================================================================
 'GDLG' ID_PALETTE_DLG Palette | grow   0   0  620  456  "Imar Hesap" {
-/* [ 1] Ada        */  TextEdit      10   30   90   20
-/* [ 2] Parsel     */  TextEdit     110   30   90   20
-/* [ 3] Arsa m2    */  RealEdit     210   30  110   20
-/* [ 4] KAKS       */  RealEdit     330   30   80   20
-/* [ 5] TAKS       */  RealEdit     420   30   70   20
-/* [ 6] Hesapla    */  Button       500   28  110   24   LargePlain  "Hesapla / Yenile"
-/* [ 7] TabloListe */  SingleSelList 10   72  180  340   PartialItems  16  NoPartialItems
-/* [ 8] TabloIcerik*/  SingleSelList 200  72  410  340   PartialItems  16  NoPartialItems
-/* [ 9] CSV        */  Button        10  420  130   24   LargePlain  "CSV Disa Aktar"
-/* [10] Durum      */  LeftText     150  424  460   18   SmallPlain  ""
-/* [11] Ayrac      */  Separator     10   62  600    2
-/* [12] */             LeftText      10   12   90   16   SmallPlain  "Ada No"
-/* [13] */             LeftText     110   12   90   16   SmallPlain  "Parsel No"
-/* [14] */             LeftText     210   12  110   16   SmallPlain  "Arsa Alani (m2)"
-/* [15] */             LeftText     330   12   80   16   SmallPlain  "KAKS (Emsal)"
-/* [16] */             LeftText     420   12   70   16   SmallPlain  "TAKS"
+/* [ 1] Ada        */  TextEdit       10   30   90   20   SmallPlain  32
+/* [ 2] Parsel     */  TextEdit      110   30   90   20   SmallPlain  32
+/* [ 3] Arsa m2    */  TextEdit      210   30  110   20   SmallPlain  16
+/* [ 4] KAKS       */  TextEdit      330   30   80   20   SmallPlain  16
+/* [ 5] TAKS       */  TextEdit      420   30   70   20   SmallPlain  16
+/* [ 6] Hesapla    */  Button        500   28  110   24   LargePlain  "Hesapla / Yenile"
+/* [ 7] TabloListe */  SingleSelList  10   72  180  340   SmallPlain  NoPartialItems  16
+/* [ 8] TabloIcerik*/  SingleSelList 200   72  410  340   SmallPlain  NoPartialItems  16
+/* [ 9] CSV        */  Button         10  420  130   24   LargePlain  "CSV Disa Aktar"
+/* [10] Durum      */  LeftText      150  424  460   18   SmallPlain  vCenter  ""
+/* [11] Ayrac      */  Separator      10   62  600    2
+/* [12] */             LeftText       10   12   90   16   SmallPlain  vCenter  "Ada No"
+/* [13] */             LeftText      110   12   90   16   SmallPlain  vCenter  "Parsel No"
+/* [14] */             LeftText      210   12  110   16   SmallPlain  vCenter  "Arsa Alani (m2)"
+/* [15] */             LeftText      330   12   80   16   SmallPlain  vCenter  "KAKS (Emsal)"
+/* [16] */             LeftText      420   12   70   16   SmallPlain  vCenter  "TAKS"
 }
 
 'DLGH' ID_PALETTE_DLG DLG_ImarPalette {
- 1   ""   TextEdit_Ada
- 2   ""   TextEdit_Parsel
- 3   ""   RealEdit_Arsa
- 4   ""   RealEdit_KAKS
- 5   ""   RealEdit_TAKS
- 6   ""   Button_Hesapla
- 7   ""   List_Tablolar
- 8   ""   List_Icerik
- 9   ""   Button_CSV
-10   ""   Text_Durum
+ 1   ""   TextEdit_0
+ 2   ""   TextEdit_1
+ 3   ""   TextEdit_2
+ 4   ""   TextEdit_3
+ 5   ""   TextEdit_4
+ 6   ""   Button_0
+ 7   ""   SingleSelListBox_0
+ 8   ""   SingleSelListBox_1
+ 9   ""   Button_1
+10   ""   LeftText_0
 11   ""   Separator_0
-12   ""   Label_Ada
-13   ""   Label_Parsel
-14   ""   Label_Arsa
-15   ""   Label_KAKS
-16   ""   Label_TAKS
+12   ""   LeftText_1
+13   ""   LeftText_2
+14   ""   LeftText_3
+15   ""   LeftText_4
+16   ""   LeftText_5
 }

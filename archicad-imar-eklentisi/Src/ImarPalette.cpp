@@ -9,7 +9,9 @@
 #include "DGFileDialog.hpp"
 #include "Location.hpp"
 
+#include <cstdlib>
 #include <fstream>
+#include <string>
 
 namespace Imar {
 
@@ -23,6 +25,14 @@ ImarPalette* ImarPalette::instance = nullptr;
 static GS::UniString US (const std::string& s)
 {
     return GS::UniString (s.c_str (), CC_UTF8);
+}
+
+// TextEdit metnini double'a cevir (Turkce virgul ondaligi da kabul eder).
+static double MetniSayi (const GS::UniString& u)
+{
+    std::string s = u.ToCStr (0, MaxUSize, CC_UTF8).Get ();
+    for (char& c : s) if (c == ',') c = '.';
+    return std::strtod (s.c_str (), nullptr);
 }
 
 // -----------------------------------------------------------------------------
@@ -66,9 +76,9 @@ ImarPalette::ImarPalette ()
     AttachToAllItems (*this);
 
     // varsayilan degerler
-    arsaEdit.SetValue (0.0);
-    kaksEdit.SetValue (1.50);
-    taksEdit.SetValue (0.30);
+    arsaEdit.SetText ("0");
+    kaksEdit.SetText ("1,50");
+    taksEdit.SetText ("0,30");
 
     // tablo icerik listesine baslangicta tek sutun ver
     tabloIcerik.SetTabFieldCount (1);
@@ -102,9 +112,9 @@ void ImarPalette::ParametreleriTopla (ProjeParametreleri& p) const
 {
     p.ada    = const_cast<DG::TextEdit&> (adaEdit).GetText ().ToCStr (0, MaxUSize, CC_UTF8).Get ();
     p.parsel = const_cast<DG::TextEdit&> (parselEdit).GetText ().ToCStr (0, MaxUSize, CC_UTF8).Get ();
-    p.arsaAlani      = const_cast<DG::RealEdit&> (arsaEdit).GetValue ();
-    p.emsalKatsayisi = const_cast<DG::RealEdit&> (kaksEdit).GetValue ();
-    p.taksKatsayisi  = const_cast<DG::RealEdit&> (taksEdit).GetValue ();
+    p.arsaAlani      = MetniSayi (const_cast<DG::TextEdit&> (arsaEdit).GetText ());
+    p.emsalKatsayisi = MetniSayi (const_cast<DG::TextEdit&> (kaksEdit).GetText ());
+    p.taksKatsayisi  = MetniSayi (const_cast<DG::TextEdit&> (taksEdit).GetText ());
     p.otoparkKurallari = VarsayilanOtoparkKurallari ();
 }
 
@@ -163,12 +173,18 @@ void ImarPalette::SeciliTabloyuGoster ()
         tabloIcerik.SetTabFieldProperties (
             (short) (i + 1), beg, end,
             DG::ListBox::Left, DG::ListBox::EndTruncate, false, true);
-        if ((size_t) i < t.sutunlar.size ())
-            tabloIcerik.SetHeaderItemText ((short) (i + 1), US (t.sutunlar[(size_t) i]));
     }
-    tabloIcerik.SetHeaderSize (DG::ListBox::DefaultHeaderSize);
 
-    // satirlar
+    // ilk satir = sutun basliklari (ayri header bandi kullanmadan)
+    {
+        tabloIcerik.AppendItem ();
+        short hrow = tabloIcerik.GetItemCount ();
+        for (short f = 0; f < sutunSay; ++f)
+            if ((size_t) f < t.sutunlar.size ())
+                tabloIcerik.SetTabItemText (hrow, (short) (f + 1), US (t.sutunlar[(size_t) f]));
+    }
+
+    // veri satirlari
     for (const auto& satir : t.satirlar) {
         tabloIcerik.AppendItem ();
         short row = tabloIcerik.GetItemCount ();
