@@ -1,4 +1,4 @@
-name: Mimari3D Web (GitHub Pages)
+name: Web (GitHub Pages) — Mimari3D + FORMstudio
 
 # Bağımsız DXF->3B/PDF web sayfasını derler ve GitHub Pages'e yayınlar.
 # Yayın adresi (proje sitesi): https://<kullanici>.github.io/<depo>/
@@ -19,6 +19,7 @@ on:
     branches: [main]
     paths:
       - "web3d/**"
+      - "formstudio/**"
       - ".github/workflows/web3d.yml"
 
 # gh-pages dalına yazabilmek için.
@@ -39,7 +40,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: web3d/package-lock.json
+          cache-dependency-path: |
+            web3d/package-lock.json
+            formstudio/package-lock.json
 
       - name: Bağımlılıkları yükle
         working-directory: web3d
@@ -52,6 +55,25 @@ jobs:
       - name: Derle
         working-directory: web3d
         run: npm run build
+
+      - name: FORMstudio bağımlılıkları
+        working-directory: formstudio
+        run: npm ci
+
+      - name: FORMstudio tip denetimi
+        working-directory: formstudio
+        run: npm run typecheck
+
+      - name: FORMstudio geometri doğrulaması
+        working-directory: formstudio
+        run: npm run verify
+
+      - name: FORMstudio derle
+        working-directory: formstudio
+        run: npm run build
+
+      - name: FORMstudio'yu /studio altına kopyala
+        run: cp -r formstudio/dist web3d/dist/studio
 
       - name: Jekyll'i devre dışı bırak
         run: touch web3d/dist/.nojekyll

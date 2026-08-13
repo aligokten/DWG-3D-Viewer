@@ -1,0 +1,31 @@
+{
+  "name": "formstudio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Parametrik 3B obje modelleme stüdyosu: saksı, vazo, kase, aydınlatma armatürü. STL/OBJ/G-code çıktısı.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "verify": "esbuild tools/verify.ts --bundle --platform=node --format=cjs --outfile=node_modules/.cache/verify.cjs && node node_modules/.cache/verify.cjs"
+  },
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4",
+    "@types/node": "^26.2.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "^0.185.0",
+    "@vitejs/plugin-react": "^5",
+    "esbuild": "^0.28.2",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vite": "^7"
+  }
+}
