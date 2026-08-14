@@ -12,6 +12,21 @@ body {
   margin: 0;
   font-family: ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+/* Kaydırıcı ve buton dokunma hedeflerini parmak için büyüt */
+input[type="range"] {
+  height: 28px;
+  touch-action: pan-x;
+}
+input[type="range"]::-webkit-slider-thumb {
+  width: 20px;
+  height: 20px;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
 }
 
 /* Kaydırma çubuğunu koyu temaya uydur */

@@ -42,6 +42,8 @@ export function Viewport({ mesh, view, fitToken, snapshotRef }: Props) {
     renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
     renderer.setSize(host.clientWidth, host.clientHeight);
     renderer.setClearColor(0x0a0a0a, 1);
+    // Dokunmatik sürüklemede tarayıcının sayfayı kaydırmasını/yakınlaştırmasını engeller.
+    renderer.domElement.style.touchAction = "none";
     host.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
@@ -54,6 +56,10 @@ export function Viewport({ mesh, view, fitToken, snapshotRef }: Props) {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
+    controls.touches = {
+      ONE: THREE.TOUCH.ROTATE,
+      TWO: THREE.TOUCH.DOLLY_PAN,
+    };
 
     scene.add(new THREE.HemisphereLight(0xffffff, 0x1b1b1b, 1.1));
     const key = new THREE.DirectionalLight(0xffffff, 2.0);
@@ -214,5 +220,5 @@ uniform float uLayers;`
     };
   }, [snapshotRef]);
 
-  return <div ref={hostRef} className="h-full w-full" />;
+  return <div ref={hostRef} className="h-full w-full touch-none" />;
 }
