@@ -97,6 +97,23 @@ Metin→görsel modelinin adında `flux` geçiyorsa `FluxPipeline`, aksi halde
 **Ekle** ile görsel yüklendiğinde üretim modu kendiliğinden *Görsel → 3B*'ye
 geçer ve küçük önizleme yazım alanında görünür.
 
+## Dağıtım (Hugging Face Space)
+
+`main` dalına giden her `trellis3d/**` değişikliği, GitHub Actions ile GPU'lu
+bir Hugging Face Space'e yüklenir; Space `deploy/Dockerfile` ile derlenir.
+
+```bash
+# yerelden elle dağıtım
+HF_TOKEN=hf_xxx python deploy/push_to_space.py --space kullanici/trellis2-panel
+
+# kendi GPU sunucunuzda
+docker build -f deploy/Dockerfile -t trellis2-panel .
+docker run --gpus all -p 7860:7860 trellis2-panel
+```
+
+Gerekli ayarlar (secret `HF_TOKEN`, variable `HF_SPACE_ID`), GPU donanımı
+seçimi ve sorun giderme: **`deploy/README.md`**.
+
 ## Doğrulama
 
 Duman testi paneli sahte motorla uçtan uca çalıştırır (GPU gerekmez):
@@ -114,6 +131,7 @@ Denetlenenler: arayüz kurulumu, metin→3B ve görsel→3B akışları, önizle
 trellis3d/
 ├── app.py                    giriş noktası (argparse + launch)
 ├── requirements.txt
+├── deploy/                   Dockerfile, Space yükleyici ve dağıtım rehberi
 ├── tools/smoke_test.py       GPU'suz uçtan uca test
 └── trellis_panel/
     ├── config.py             modlar, çözünürlükler, ayarlar

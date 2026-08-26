@@ -1,0 +1,82 @@
+name: TRELLIS.2 Paneli — Hugging Face Space dağıtımı
+
+# Paneli (`trellis3d/`) bir Hugging Face Space'e yükler. Space "docker" SDK'si
+# ile çalışır; gerçek üretim için Space'e GPU donanımı atanmalıdır.
+#
+# TEK SEFERLİK AYAR (bkz. trellis3d/deploy/README.md):
+#   Settings → Secrets and variables → Actions
+#     · Secret   HF_TOKEN      : Hugging Face "write" yetkili erişim anahtarı
+#     · Variable HF_SPACE_ID   : hedef Space, örn. kullanici/trellis2-panel
+
+on:
+  workflow_dispatch:
+    inputs:
+      space_id:
+        description: "Hedef Space (boş bırakılırsa HF_SPACE_ID değişkeni kullanılır)"
+        required: false
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - "trellis3d/**"
+      - ".github/workflows/deploy-hf-space.yml"
+
+concurrency:
+  group: hf-space-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: trellis3d
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Bağımlılıkları yükle
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt huggingface_hub
+
+      - name: Duman testi (mock motor)
+        run: python tools/smoke_test.py
+
+      - name: Hedef Space'i belirle
+        id: target
+        env:
+          INPUT_SPACE: ${{ inputs.space_id }}
+          VAR_SPACE: ${{ vars.HF_SPACE_ID }}
+        run: |
+          SPACE="${INPUT_SPACE:-$VAR_SPACE}"
+          if [ -z "$SPACE" ]; then
+            echo "::error::HF_SPACE_ID deposu değişkeni tanımlı değil ve elle bir Space verilmedi."
+            echo "Ayrıntı: trellis3d/deploy/README.md"
+            exit 1
+          fi
+          echo "space=$SPACE" >> "$GITHUB_OUTPUT"
+
+      - name: Anahtarı denetle
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "::error::HF_TOKEN secret'ı tanımlı değil (Hugging Face 'write' anahtarı gerekir)."
+            echo "Ayrıntı: trellis3d/deploy/README.md"
+            exit 1
+          fi
+
+      - name: Space'e yükle
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: python deploy/push_to_space.py --space "${{ steps.target.outputs.space }}"
+
+      - name: Özet
+        run: |
+          echo "### Panel dağıtıldı" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "https://huggingface.co/spaces/${{ steps.target.outputs.space }}" >> "$GITHUB_STEP_SUMMARY"

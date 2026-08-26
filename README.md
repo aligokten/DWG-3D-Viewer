@@ -81,3 +81,8 @@ TRELLIS2_ROOT=/yol/TRELLIS.2 python app.py  # gerçek üretim (Linux + NVIDIA GP
 
 Gerçek üretim TRELLIS.2 kurulumunu gerektirir (Linux, CUDA 12.4, ≥24 GB VRAM).
 Ayrıntı: `trellis3d/README.md`.
+
+**Dağıtım:** `main` dalındaki her `trellis3d/**` değişikliği, GitHub Actions ile
+GPU'lu bir Hugging Face Space'e yüklenir (`.github/workflows/deploy-hf-space.yml`).
+Tek seferlik ayarlar ve kendi sunucunuzda Docker ile çalıştırma:
+`trellis3d/deploy/README.md`.
