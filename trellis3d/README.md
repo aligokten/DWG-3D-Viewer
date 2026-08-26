@@ -1,11 +1,14 @@
 # TRELLIS.2 Paneli — Metin → 3B ve Görsel → 3B
 
 [microsoft/TRELLIS.2](https://github.com/microsoft/TRELLIS.2) modeliyle 3B varlık
-üreten Gradio paneli. Arayüz yerleşimi TRELLIS.2 referans demosuyla aynıdır:
-solda istem + ayar sütunu, ortada **Önizleme → Dışa aktar** adımları, sağda
-örnekler.
+üreten Gradio paneli. Arayüz, verilen referans tasarıma göre kurgulanmıştır:
+solda ikon rayı, yanında koyu kenar çubuğu (üretim modu, aşamalar, modeller ve
+durum kartı), ortada sekme çipleri + kahraman bölümü + son üretim kartları ve
+altta degrade çerçeveli yazım alanı (Ekle / Gelişmiş / GLB çıkar / Üret).
 
-![Panel arayüzü](assets/panel.png)
+![Panel arayüzü — üretim sonrası](assets/panel.png)
+
+![Panel arayüzü — başlangıç](assets/panel-empty.png)
 
 ## Ne yapar
 
@@ -80,6 +83,20 @@ Metin→görsel modelinin adında `flux` geçiyorsa `FluxPipeline`, aksi halde
   gücü, rehberlik ölçeği, örnekleme adımı ve `rescale_t`. Varsayılanlar
   TRELLIS.2 demosuyla aynıdır.
 
+## Arayüz haritası
+
+| Bölge | İçerik |
+|-------|--------|
+| İkon rayı | Üret / Sohbet / Kütüphane / Keşfet kısayolları |
+| Kenar çubuğu | Yeni üretim, **Üretim modu** (Metin → 3B / Görsel → 3B), üç aşama, yüklü modeller, motor durumu |
+| Sekme çipleri | **Önizleme** ve **Dışa aktar** adımları |
+| Kahraman bölümü | İlk açılışta gösterilir; ilk üretimden sonra yerini önizleyiciye bırakır |
+| Son üretimler | Her üretim kart olarak eklenir (kaynak, çözünürlük, seed, zaman) |
+| Yazım alanı | İstem kutusu + **Ekle** (görsel), **Gelişmiş** (ayarlar), **GLB çıkar**, **Üret** |
+
+**Ekle** ile görsel yüklendiğinde üretim modu kendiliğinden *Görsel → 3B*'ye
+geçer ve küçük önizleme yazım alanında görünür.
+
 ## Doğrulama
 
 Duman testi paneli sahte motorla uçtan uca çalıştırır (GPU gerekmez):
@@ -104,6 +121,7 @@ trellis3d/
     ├── engine.py             Trellis2Engine (GPU) + MockEngine (demo)
     ├── text2image.py         metin → görsel aşaması
     ├── ui.py                 önizleyici CSS/JS/HTML
+    ├── theme.py              koyu tema CSS'i ve statik arayüz parçaları
     ├── assets.py             ikon üretimi, base64 gömme
     └── glb.py                demo modu için minimal GLB yazıcı
 ```
