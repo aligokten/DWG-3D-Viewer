@@ -1,0 +1,39 @@
+name: TRELLIS.2 Paneli — duman testi
+
+# Panel GPU olmadan derlenemez/çalıştırılamaz; bu iş akışı paneli "mock" motorla
+# uçtan uca çalıştırarak arayüzün ve akışların bozulmadığını doğrular.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "trellis3d/**"
+      - ".github/workflows/trellis3d.yml"
+  pull_request:
+    paths:
+      - "trellis3d/**"
+      - ".github/workflows/trellis3d.yml"
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: trellis3d
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Bağımlılıkları yükle
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Söz dizimi denetimi
+        run: python -m compileall -q app.py trellis_panel tools
+
+      - name: Duman testi (mock motor)
+        run: python tools/smoke_test.py

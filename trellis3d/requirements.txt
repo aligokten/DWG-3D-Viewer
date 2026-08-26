@@ -1,0 +1,11 @@
+# Panelin kendi bağımlılıkları. 3B üretim için ayrıca TRELLIS.2 kurulumu gerekir
+# (bkz. README: `. ./setup.sh --new-env --basic --flash-attn ...`).
+gradio>=5.44
+pillow>=10.0
+numpy>=1.26
+
+# Metin → görsel aşaması (yalnız gerçek üretimde; --mock modunda gerekmez).
+# diffusers>=0.31
+# transformers>=4.44
+# accelerate>=0.34
+# sentencepiece>=0.2
