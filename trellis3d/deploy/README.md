@@ -36,6 +36,10 @@ oluşturur.
 İş akışı önce GPU'suz duman testini çalıştırır, sonra panel dosyalarını
 Space'e yükler. Yükleme bittiğinde iş özetinde Space adresi görünür.
 
+Ayarlar henüz tanımlı değilse `main`'e yapılan push'larda iş **başarılı**
+biter ve özetinde "Dağıtım atlandı" uyarısı görünür; **Run workflow** ile elle
+çalıştırıldığında ise eksik ayarları hata olarak bildirir.
+
 ## 4) Space'e GPU verin
 
 Space → **Settings → Hardware**: TRELLIS.2 için **≥24 GB VRAM** gerekir
@@ -92,8 +96,7 @@ yeniden başlatmalarda indirmeyi önler.
 
 | Belirti | Neden / çözüm |
 |---------|----------------|
-| Actions: `HF_TOKEN secret'ı tanımlı değil` | 2. adımdaki secret eksik |
-| Actions: `HF_SPACE_ID ... tanımlı değil` | 2. adımdaki variable eksik ya da elle Space verin |
+| Actions özetinde `Dağıtım atlandı` | 2. adımdaki `HF_TOKEN` ve/veya `HF_SPACE_ID` eksik. Otomatik push'ta iş yeşil kalır, yalnız uyarı verilir; elle çalıştırmada (Run workflow) hata olarak bildirilir. |
 | Space `Runtime error: CUDA` | Donanım CPU kalmış; GPU seçin veya `TRELLIS2_PANEL_MOCK=1` |
 | Üretimde `No module named 'trellis2'` | Space CPU donanımında Docker imajı GPU uzantılarını derleyememiş olabilir; GPU donanımıyla yeniden derleyin |
 | Derleme çok uzun / zaman aşımı | Space'i GPU donanımına alıp yeniden derleyin; derleme adımları katman katman önbelleklenir |
