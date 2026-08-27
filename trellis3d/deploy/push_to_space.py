@@ -20,9 +20,29 @@ from typing import List
 
 PANEL_DIR = Path(__file__).resolve().parent.parent
 
+HINT_CREATE_MANUALLY = (
+    "Space'i elle oluşturun: https://huggingface.co/new-space\n"
+    "  · Space name : {space}  (sahip/ad, HF_SPACE_ID ile birebir aynı olmalı)\n"
+    "  · SDK        : Docker\n"
+    "  · Hardware   : önce ücretsiz CPU seçilebilir, GPU'ya sonra geçilir\n"
+    "Oluşturduktan sonra bu iş akışını yeniden çalıştırın."
+)
+
 # Space'e gönderilmeyecekler: geçici çıktılar, derleme artıkları, git verisi.
 EXCLUDE_DIRS = {"tmp", "__pycache__", ".git", ".github", "node_modules", ".pytest_cache"}
 EXCLUDE_SUFFIXES = {".pyc", ".pyo", ".glb"}
+
+
+def _short_error(exc: Exception) -> str:
+    """Hugging Face hatasını tek satırda özetler (402/403 gibi durumlar için)."""
+    status = getattr(getattr(exc, "response", None), "status_code", None)
+    text = str(exc).splitlines()[0] if str(exc) else exc.__class__.__name__
+    if status == 402:
+        return ("402 Payment Required — Hugging Face hesabı yeni Space oluşturmaya "
+                "izin vermiyor (ödeme yöntemi/kota).")
+    if status == 403:
+        return "403 Forbidden — token'ın yazma yetkisi yok ya da bu isim üzerinde hak yok."
+    return f"{exc.__class__.__name__}: {text}"
 
 
 def collect_files(source: Path) -> List[Path]:
@@ -65,6 +85,8 @@ def main() -> int:
     parser.add_argument("--repo", default=os.environ.get("GITHUB_REPOSITORY", "aligokten/DWG-3D-Viewer"))
     parser.add_argument("--sha", default=os.environ.get("GITHUB_SHA", "local")[:12])
     parser.add_argument("--private", action="store_true", help="Space'i gizli oluştur")
+    parser.add_argument("--no-create", action="store_true",
+                        help="Space'i oluşturmayı deneme, yalnızca var olana yükle")
     parser.add_argument("--dry-run", action="store_true", help="Yükleme yapma, dosya listesini yazdır")
     args = parser.parse_args()
 
@@ -90,22 +112,39 @@ def main() -> int:
             return 0
 
         from huggingface_hub import HfApi
+        from huggingface_hub.utils import RepositoryNotFoundError
 
         api = HfApi(token=token)
-        api.create_repo(
-            repo_id=args.space,
-            repo_type="space",
-            space_sdk="docker",
-            private=args.private,
-            exist_ok=True,
-        )
-        api.upload_folder(
-            repo_id=args.space,
-            repo_type="space",
-            folder_path=str(staging),
-            commit_message=f"DWG-3D-Viewer trellis3d dağıtımı ({args.sha})",
-            delete_patterns="*",  # Space'te kalan eski dosyaları temizle.
-        )
+
+        # Space'i oluşturmayı dene. Hesap Space oluşturmaya kapalıysa (402
+        # Payment Required, kota/ödeme durumu) bu adım dağıtımı durdurmasın:
+        # Space elle oluşturulmuş olabilir, yükleme yine de çalışır.
+        if not args.no_create:
+            try:
+                api.create_repo(
+                    repo_id=args.space,
+                    repo_type="space",
+                    space_sdk="docker",
+                    private=args.private,
+                    exist_ok=True,
+                )
+            except Exception as exc:  # noqa: BLE001 - nedeni kullanıcıya bildiriyoruz
+                print(f"\nUYARI: Space oluşturulamadı: {_short_error(exc)}")
+                print("Space zaten varsa sorun değil, yüklemeye devam ediliyor.")
+                print(HINT_CREATE_MANUALLY.format(space=args.space))
+
+        try:
+            api.upload_folder(
+                repo_id=args.space,
+                repo_type="space",
+                folder_path=str(staging),
+                commit_message=f"DWG-3D-Viewer trellis3d dağıtımı ({args.sha})",
+                delete_patterns="*",  # Space'te kalan eski dosyaları temizle.
+            )
+        except RepositoryNotFoundError:
+            print(f"\nHATA: Space bulunamadı: {args.space}", file=sys.stderr)
+            print(HINT_CREATE_MANUALLY.format(space=args.space), file=sys.stderr)
+            return 3
 
     print(f"\nTamam: https://huggingface.co/spaces/{args.space}")
     return 0
