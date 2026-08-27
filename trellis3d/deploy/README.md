@@ -24,8 +24,16 @@ Depo → **Settings → Secrets and variables → Actions**
 | Secret | `HF_TOKEN` | 1. adımdaki write anahtarı |
 | Variable | `HF_SPACE_ID` | Hedef Space, örn. `aligokten/trellis2-panel` |
 
-Space'in önceden var olması gerekmez; iş akışı yoksa `docker` SDK'siyle
-oluşturur.
+İş akışı Space'i `docker` SDK'siyle oluşturmayı dener. Hugging Face hesabınız
+API'den yeni Space açmaya izin vermiyorsa (`402 Payment Required`) bu adım
+atlanır ve yükleme yine de sürer — bu durumda Space'i bir kez elle açın:
+
+**https://huggingface.co/new-space**
+
+* Space name: `HF_SPACE_ID` ile **birebir aynı** (örn. `trellis2-panel`)
+* SDK: **Docker** (şablon seçmeyin, boş Docker Space yeterli)
+* Hardware: başlangıçta ücretsiz CPU seçilebilir, GPU'ya sonra geçilir
+* Visibility: Public (özel Space de olur, panelin çalışmasına etkisi yok)
 
 ## 3) İlk dağıtımı çalıştırın
 
@@ -96,6 +104,9 @@ yeniden başlatmalarda indirmeyi önler.
 
 | Belirti | Neden / çözüm |
 |---------|----------------|
+| Actions: `402 Payment Required` (`/api/repos/create`) | HF hesabı API'den yeni Space açmaya izin vermiyor. Space'i https://huggingface.co/new-space adresinden Docker SDK ile elle açın; iş akışı bundan sonra yalnızca yükleme yapar. |
+| Actions: `Space bulunamadı` | `HF_SPACE_ID` ile Space'in adı/sahibi birebir aynı değil (büyük/küçük harf dahil) |
+| Actions: `403 Forbidden` | Token **Write** değil ya da o isim üzerinde yetkiniz yok |
 | Actions özetinde `Dağıtım atlandı` | 2. adımdaki `HF_TOKEN` ve/veya `HF_SPACE_ID` eksik. Otomatik push'ta iş yeşil kalır, yalnız uyarı verilir; elle çalıştırmada (Run workflow) hata olarak bildirilir. |
 | Space `Runtime error: CUDA` | Donanım CPU kalmış; GPU seçin veya `TRELLIS2_PANEL_MOCK=1` |
 | Üretimde `No module named 'trellis2'` | Space CPU donanımında Docker imajı GPU uzantılarını derleyememiş olabilir; GPU donanımıyla yeniden derleyin |
