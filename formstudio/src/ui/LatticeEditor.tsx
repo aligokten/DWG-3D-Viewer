@@ -47,34 +47,44 @@ export function LatticeEditor({ lattice, onChange }: Props) {
   // Görselde en üst satır objenin ağzı olacak şekilde ters sırada gösterilir.
   const rowsDesc = Array.from({ length: lattice.rows }, (_, i) => lattice.rows - 1 - i);
 
+  // Dokunmatikte sürükleme sırasında tüm pointer olayları ilk hücreye kilitlenir
+  // (pointerenter diğer hücrelerde tetiklenmez); bu yüzden hangi hücrenin altında
+  // olunduğunu her hareket olayında elementFromPoint ile buluyoruz. Bu, fare için de
+  // aynı davranışı sağlar.
+  const paintAt = (clientX: number, clientY: number, reset: boolean) => {
+    const el = document.elementFromPoint(clientX, clientY);
+    if (!(el instanceof HTMLElement)) return;
+    const { row, col } = el.dataset;
+    if (row === undefined || col === undefined) return;
+    setValue(+row, +col, reset ? 0 : brush);
+  };
+
   return (
-    <div
-      onPointerUp={() => (painting.current = false)}
-      onPointerLeave={() => (painting.current = false)}
-    >
+    <div>
       <div
-        className="grid gap-[3px] rounded-lg border border-neutral-800 bg-neutral-950 p-2"
+        className="touch-none select-none grid gap-[3px] rounded-lg border border-neutral-800 bg-neutral-950 p-2"
         style={{ gridTemplateColumns: `repeat(${lattice.cols}, minmax(0,1fr))` }}
+        onPointerDown={(e) => {
+          painting.current = true;
+          paintAt(e.clientX, e.clientY, e.altKey || e.button === 2);
+        }}
+        onPointerMove={(e) => painting.current && paintAt(e.clientX, e.clientY, false)}
+        onPointerUp={() => (painting.current = false)}
+        onPointerLeave={() => (painting.current = false)}
+        onPointerCancel={() => (painting.current = false)}
+        onContextMenu={(e) => e.preventDefault()}
       >
         {rowsDesc.map((row) =>
           Array.from({ length: lattice.cols }, (_, col) => {
             const v = lattice.values[row * lattice.cols + col] ?? 0;
             return (
-              <button
+              <div
                 key={`${row}-${col}`}
-                type="button"
+                data-row={row}
+                data-col={col}
                 title={`satır ${row + 1}, sütun ${col + 1}: ${v.toFixed(2)}`}
                 className="aspect-square rounded-[3px] border border-white/5 transition-colors"
                 style={{ background: cellColor(v) }}
-                onPointerDown={(e) => {
-                  painting.current = true;
-                  setValue(row, col, e.altKey || e.button === 2 ? 0 : brush);
-                }}
-                onPointerEnter={() => painting.current && setValue(row, col, brush)}
-                onContextMenu={(e) => {
-                  e.preventDefault();
-                  setValue(row, col, 0);
-                }}
               />
             );
           })

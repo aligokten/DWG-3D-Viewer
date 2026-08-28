@@ -9,7 +9,8 @@ interface Props {
 }
 
 const PAD = 26;
-const HIT = 14;
+// Dokunmatik parmak ucu fare imlecinden kalın olduğu için isabet yarıçapı geniş tutulur.
+const HIT = 22;
 
 /** Dönel (revolve) profil eğrisi editörü: sol kenar dönme ekseni, yukarı = obje yüksekliği. */
 export function ProfileEditor({ points, onChange, height = 320 }: Props) {
@@ -82,7 +83,7 @@ export function ProfileEditor({ points, onChange, height = 320 }: Props) {
       const x = toX(p.r);
       const y = toY(p.z);
       ctx.beginPath();
-      ctx.arc(x, y, 5.5, 0, Math.PI * 2);
+      ctx.arc(x, y, 7, 0, Math.PI * 2);
       ctx.fillStyle = "#fb923c";
       ctx.fill();
       ctx.strokeStyle = "rgba(0,0,0,0.6)";

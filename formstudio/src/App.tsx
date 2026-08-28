@@ -49,6 +49,9 @@ export default function App() {
   const [tab, setTab] = useState<Tab>("Profil");
   const [fitToken, setFitToken] = useState(0);
   const [panelOpen, setPanelOpen] = useState(true);
+  // Dar ekranlarda panel ve 3B görünüm aynı anda sığmaz; hangisinin
+  // gösterileceğini bu seçer. Uygulama önce 3B önizlemeyle açılır.
+  const [mobilePane, setMobilePane] = useState<"preview" | "edit">("preview");
 
   const history = useRef<ModelParams[]>([]);
   const future = useRef<ModelParams[]>([]);
@@ -117,43 +120,74 @@ export default function App() {
 
   const baseName = `${params.kind}-${Math.round(params.height)}x${Math.round(params.radius * 2)}`;
 
+  const mainVisibleOnMobile = !panelOpen || mobilePane === "preview";
+
   return (
-    <div className="flex h-screen min-h-0 flex-col bg-neutral-950 text-neutral-200">
+    <div className="flex h-dvh min-h-0 flex-col overflow-hidden bg-neutral-950 text-neutral-200">
       {/* Üst çubuk */}
-      <header className="flex shrink-0 items-center gap-3 border-b border-neutral-800 px-4 py-2.5">
-        <span className="font-mono text-lg font-bold tracking-tight">
+      <header className="flex shrink-0 items-center gap-2 overflow-x-auto border-b border-neutral-800 px-3 py-2.5 sm:gap-3 sm:px-4">
+        <span className="shrink-0 font-mono text-lg font-bold tracking-tight">
           <span className="text-orange-500">FORM</span>studio
         </span>
-        <span className="rounded-md border border-neutral-700 px-2 py-0.5 font-mono text-[11px] text-neutral-400">
+        <span className="hidden shrink-0 rounded-md border border-neutral-700 px-2 py-0.5 font-mono text-[11px] text-neutral-400 sm:inline-block">
           v1.0
         </span>
         <span className="hidden text-[11px] uppercase tracking-[0.2em] text-neutral-600 sm:inline">
           parametrik 3B obje modelleme
         </span>
-        <div className="ml-auto flex items-center gap-2">
-          {busy ? <span className="text-[11px] text-orange-400">hesaplanıyor…</span> : null}
+        <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
+          {busy ? <span className="hidden text-[11px] text-orange-400 sm:inline">hesaplanıyor…</span> : null}
           <Button onClick={undo} title="Geri al (Ctrl+Z)">↶</Button>
           <Button onClick={redo} title="İleri al (Ctrl+Shift+Z)">↷</Button>
           <Button onClick={() => setFitToken((t) => t + 1)} title="Görünümü sığdır">⤢</Button>
           <Button onClick={() => setPanelOpen((o) => !o)}>
-            {panelOpen ? "Paneli gizle" : "Panel"}
+            <span className="hidden sm:inline">{panelOpen ? "Paneli gizle" : "Panel"}</span>
+            <span className="sm:hidden">{panelOpen ? "⛶" : "☰"}</span>
           </Button>
         </div>
       </header>
 
-      <div className="flex min-h-0 flex-1 flex-col-reverse md:flex-row">
+      {/* Mobil sekme anahtarı: panel açıkken 3B önizleme ile ayarlar arasında geçiş */}
+      {panelOpen ? (
+        <div className="flex shrink-0 gap-1 border-b border-neutral-800 p-1.5 md:hidden">
+          <button
+            type="button"
+            onClick={() => setMobilePane("preview")}
+            className={`flex-1 rounded-md py-2 text-[13px] font-medium transition-colors ${
+              mobilePane === "preview" ? "bg-orange-600 text-white" : "text-neutral-400"
+            }`}
+          >
+            3B Önizleme
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobilePane("edit")}
+            className={`flex-1 rounded-md py-2 text-[13px] font-medium transition-colors ${
+              mobilePane === "edit" ? "bg-neutral-800 text-white" : "text-neutral-400"
+            }`}
+          >
+            Ayarlar
+          </button>
+        </div>
+      ) : null}
+
+      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         {/* Sol panel */}
         {panelOpen ? (
-          <aside className="flex w-full shrink-0 flex-col border-neutral-800 md:h-full md:w-[370px] md:border-r">
+          <aside
+            className={`${
+              mobilePane === "edit" ? "flex" : "hidden"
+            } w-full min-h-0 flex-col border-neutral-800 md:flex md:h-full md:w-[370px] md:border-r md:border-b-0`}
+          >
             {/* Obje türleri */}
-            <div className="grid grid-cols-5 gap-1 border-b border-neutral-800 p-2">
+            <div className="flex gap-1 overflow-x-auto border-b border-neutral-800 p-2 md:grid md:grid-cols-5 md:overflow-visible">
               {(Object.keys(PRESETS) as ObjectKind[]).map((k) => (
                 <button
                   key={k}
                   type="button"
                   title={PRESETS[k].hint}
                   onClick={() => applyPreset(k)}
-                  className={`rounded-lg px-1 py-2 text-[11px] leading-tight transition-colors ${
+                  className={`shrink-0 rounded-lg px-2.5 py-2 text-[11px] leading-tight whitespace-nowrap transition-colors md:w-full md:whitespace-normal md:px-1 ${
                     params.kind === k
                       ? "bg-orange-600 text-white"
                       : "border border-neutral-800 text-neutral-400 hover:border-neutral-600"
@@ -335,7 +369,7 @@ export default function App() {
             </div>
 
             {/* Dışa aktarım */}
-            <div className="grid shrink-0 grid-cols-3 gap-2 border-t border-neutral-800 p-2">
+            <div className="grid shrink-0 grid-cols-3 gap-2 border-t border-neutral-800 p-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
               <Button variant="primary" onClick={() => download(toBinarySTL(mesh, baseName), `${baseName}.stl`)}>
                 STL
               </Button>
@@ -374,7 +408,11 @@ export default function App() {
         ) : null}
 
         {/* 3B görünüm */}
-        <main className="relative min-h-[45vh] flex-1">
+        <main
+          className={`${
+            mainVisibleOnMobile ? "flex" : "hidden"
+          } relative min-h-0 flex-1 md:flex`}
+        >
           <Viewport mesh={mesh} view={view} fitToken={fitToken} snapshotRef={snapshot} />
           <div className="pointer-events-none absolute bottom-3 left-3 rounded-lg bg-black/50 px-3 py-2 font-mono text-[11px] leading-relaxed text-neutral-400 backdrop-blur">
             <div>
