@@ -1,0 +1,23 @@
+# Derleme ciktilari
+/Build/
+/build/
+*.apx
+*.bundle
+*.o
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+
+# Test derlemesi
+/Test/test_imarcalc
+/Test/test_imarcalc.exe
+
+# IDE
+.vs/
+*.user
+.idea/
+
+# Sablon Tools submodule (README'ye gore ayrica eklenir)
+/Tools/

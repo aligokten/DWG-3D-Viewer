@@ -1,0 +1,13 @@
+{
+    "addOnName": "ImarHesap",
+    "defaultLanguage": "INT",
+    "languages": [
+        "INT"
+    ],
+    "version": "0.1.0",
+    "copyright": {
+        "name": "Imar Hesap Add-On",
+        "year": "%Y"
+    },
+    "description": "Planli Alanlar Imar Yonetmeligi hesap tablolari"
+}
